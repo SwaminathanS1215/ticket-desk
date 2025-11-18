@@ -1,12 +1,10 @@
-import { pageTitle } from 'ember-page-title';
-import { WelcomePage } from 'ember-welcome-page';
+import Component from '@glimmer/component';
+import DashboardLayout from '../components/dashboard-layout.gjs';
 
-<template>
-  {{pageTitle "TicketDesk"}}
-
-  {{outlet}}
-
-  {{! The following component displays Ember's default welcome message. }}
-  <WelcomePage />
-  {{! Feel free to remove this! }}
-</template>
+export default class ApplicationTemplate extends Component {
+  <template>
+    <DashboardLayout>
+      {{outlet}}
+    </DashboardLayout>
+  </template>
+}
