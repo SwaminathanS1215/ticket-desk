@@ -92,6 +92,7 @@
     "edition": "octane"
   },
   "dependencies": {
-    "chart.js": "^4.5.1"
+    "chart.js": "^4.5.1",
+    "heroicons": "^2.2.0"
   }
 }
