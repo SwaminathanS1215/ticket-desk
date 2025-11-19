@@ -12,7 +12,7 @@ export default class LayoutSidebar extends Component {
 
           <li>
             <LinkTo
-              @route="index"
+              @route="dashboard"
               class="block px-4 py-2 rounded-lg hover:bg-indigo-700 font-medium"
             >
               Dashboard
