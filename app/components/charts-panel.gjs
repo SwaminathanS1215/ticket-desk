@@ -3,7 +3,7 @@ import BarChartCard from '../components/bar-chart-card.gjs';
 import eq from 'ticket-desk/helpers/eq';
 
 <template>
-  <div class="">
+  <div class="flex">
      {{#each @charts as |chart|}}
       {{#if (eq chart.type "bar")}}
         <BarChartCard  @data={{chart}}/>
