@@ -1,17 +1,13 @@
 /**
- * Debugging:
- *   https://eslint.org/docs/latest/use/configure/debug
- *  ----------------------------------------------------
- *
- *   Print a file's calculated configuration
- *
- *     npx eslint --print-config path/to/file.js
- *
- *   Inspecting the config
- *
- *     npx eslint --inspect-config
- *
+ * ESLint Flat Config for Ember (JS + GJS)
+ * ---------------------------------------
+ * Fully compatible with:
+ *  - Prettier
+ *  - VS Code "format on save"
+ *  - Ember Octane & Strict Mode
+ *  - GJS Templates
  */
+
 import globals from 'globals';
 import js from '@eslint/js';
 
@@ -25,91 +21,106 @@ import babelParser from '@babel/eslint-parser';
 const esmParserOptions = {
   ecmaFeatures: { modules: true },
   ecmaVersion: 'latest',
+  sourceType: 'module'
 };
 
 export default [
+  /**
+   * Base recommended rules
+   */
   js.configs.recommended,
+
+  /**
+   * Disables conflicting styling rules (prettier handles formatting)
+   */
   eslintConfigPrettier,
+
+  /**
+   * Ember plugin base + GJS support
+   */
   ember.configs.base,
   ember.configs.gjs,
+
   /**
-   * Ignores must be in their own object
-   * https://eslint.org/docs/latest/use/configure/ignore
+   * Files to ignore
    */
   {
-    ignores: ['dist/', 'node_modules/', 'coverage/', '!**/.*'],
+    ignores: [
+      'dist/',
+      'node_modules/',
+      'coverage/',
+      '.embroider/',
+      '!**/.*'
+    ]
   },
+
   /**
-   * https://eslint.org/docs/latest/use/configure/configuration-files#configuring-linter-options
+   * Global linter options
    */
   {
     linterOptions: {
-      reportUnusedDisableDirectives: 'error',
-    },
+      reportUnusedDisableDirectives: 'error'
+    }
   },
-  {
-    files: ['**/*.js'],
-    languageOptions: {
-      parser: babelParser,
-    },
-  },
+
+  /**
+   * All JS/GJS files (App logic)
+   */
   {
     files: ['**/*.{js,gjs}'],
     languageOptions: {
+      parser: babelParser,
       parserOptions: esmParserOptions,
       globals: {
-        ...globals.browser,
-      },
-    },
+        ...globals.browser
+      }
+    }
   },
+
+  /**
+   * Test files
+   */
   {
     files: ['tests/**/*-test.{js,gjs}'],
-    plugins: {
-      qunit,
-    },
+    plugins: { qunit },
+    rules: qunit.configs.recommended.rules
   },
+
   /**
-   * CJS node files
+   * Node/CommonJS files
    */
   {
     files: [
       '**/*.cjs',
-      'config/**/*.js',
       'testem.js',
       'testem*.js',
-      '.prettierrc.js',
-      '.stylelintrc.js',
-      '.template-lintrc.js',
       'ember-cli-build.js',
+      'config/**/*.js'
     ],
-    plugins: {
-      n,
-    },
-
+    plugins: { n },
     languageOptions: {
       sourceType: 'script',
       ecmaVersion: 'latest',
       globals: {
-        ...globals.node,
-      },
+        ...globals.node
+      }
     },
+    rules: n.configs['flat/recommended'].rules
   },
+
   /**
-   * ESM node files
+   * Node ESM Files
    */
   {
     files: ['**/*.mjs'],
-    plugins: {
-      n,
-    },
-
+    plugins: { n },
     languageOptions: {
       sourceType: 'module',
-      ecmaVersion: 'latest',
       parserOptions: esmParserOptions,
       globals: {
-        ...globals.node,
-      },
+        ...globals.node
+      }
     },
-  },
+    rules: n.configs['flat/recommended-module'].rules
+  }
 ];

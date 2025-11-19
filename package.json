@@ -90,5 +90,8 @@
   },
   "ember": {
     "edition": "octane"
+  },
+  "dependencies": {
+    "heroicons": "^2.2.0"
   }
 }
