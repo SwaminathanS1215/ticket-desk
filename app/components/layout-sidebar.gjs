@@ -18,6 +18,14 @@ export default class LayoutSidebar extends Component {
               Dashboard
             </LinkTo>
           </li>
+           <li>
+            <LinkTo
+              @route="ticket"
+              class="block px-4 py-2 rounded-lg hover:bg-indigo-700 font-medium"
+            >
+              Ticket List
+            </LinkTo>
+          </li>
         </ul>
       </nav>
     </aside>
