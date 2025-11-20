@@ -51,10 +51,10 @@ export default class TableToolbar extends Component {
   <template>
     <div class="flex items-center justify-between py-3">
 
-      <!-- Left group: Select & Sort -->
+      {{!-- Left group: Select & Sort --}}
       <div class="flex items-center space-x-4">
 
-        <!-- Select All -->
+        {{!-- Select All --}}
         <label class="flex items-center space-x-2 cursor-pointer">
           <input
             type="checkbox"
@@ -66,7 +66,7 @@ export default class TableToolbar extends Component {
 
         <span class="text-gray-300">|</span>
 
-        <!-- Sort dropdown -->
+        {{!-- Sort dropdown --}}
         <div class="flex items-center space-x-2 text-sm">
           <span class="text-gray-600">Sort by:</span>
 
@@ -80,9 +80,9 @@ export default class TableToolbar extends Component {
         </div>
       </div>
 
-      <!-- Right group: Export + Pagination + Filter -->
+      {{!-- Right group: Export + Pagination + Filter --}}
       <div class="flex items-center space-x-3">
-        <!-- Pagination info -->
+        {{!-- Pagination info --}}
         <span class="text-sm text-gray-600">
           {{this.args.start}}
           -
@@ -91,28 +91,25 @@ export default class TableToolbar extends Component {
           {{this.args.total}}
         </span>
 
-        <!-- Prev -->
+        {{!-- Prev --}}
         <button
           class="border border-gray-200 p-2 rounded-md disabled:opacity-40"
-          disabled={{this.args.disablePrev}}
-          {{on "click" this.prevPage}}
+          disabled={{this.args.disablePrev}} type="button" {{on "click" this.prevPage}}
         >
           ←
         </button>
 
-        <!-- Next -->
+        {{!-- Next --}}
         <button
           class="border border-gray-200 p-2 rounded-md disabled:opacity-40"
-          disabled={{this.args.disableNext}}
-          {{on "click" this.nextPage}}
+          disabled={{this.args.disableNext}} type="button" {{on "click" this.nextPage}}
         >
           →
         </button>
 
-        <!-- Filter button -->
+        {{!-- Filter button --}}
         <button
-          class="border border-blue-500 text-blue-600 p-2 rounded-md hover:bg-blue-50"
-          {{on "click" this.filterAction}}
+          class="border border-blue-500 text-blue-600 p-2 rounded-md hover:bg-blue-50" type="button" {{on "click" this.filterAction}}
         >
           🔍
         </button>

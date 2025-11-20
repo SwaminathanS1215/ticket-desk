@@ -41,7 +41,7 @@ export default class SearchDropdown extends Component {
   <template>
     <div class="relative inline-block w-56">
 
-      <!-- Trigger -->
+      {{!-- Trigger --}}
       <button
         type="button"
         class="w-full border border-gray-300 bg-white rounded-md px-3 py-2 text-left text-sm hover:bg-gray-50"
@@ -55,7 +55,7 @@ export default class SearchDropdown extends Component {
           class="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-10"
         >
 
-          <!-- Search box -->
+          {{!-- Search box --}}
           <div class="p-2">
             <input
               type="text"
@@ -66,7 +66,7 @@ export default class SearchDropdown extends Component {
             />
           </div>
 
-          <!-- Filtered list -->
+          {{!-- Filtered list --}}
           <div class="max-h-56 overflow-y-auto">
             {{#each this.filteredItems as |item|}}
               <button
@@ -74,8 +74,7 @@ export default class SearchDropdown extends Component {
                   {{if
                     (isEqual this.args.selected.value item.value)
                     'bg-blue-50'
-                  }}"
-                {{on "click" (fn this.selectItem item)}}
+                  }}" type="button" {{on "click" (fn this.selectItem item)}}
               >
                 <span>{{item.label}}</span>
 
@@ -88,11 +87,10 @@ export default class SearchDropdown extends Component {
 
           <div class="border-t my-1"></div>
 
-          <!-- ASC -->
+          {{!-- ASC --}}
           <button
             class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 flex justify-between
-              {{if (isEqual this.args.selectedOrder 'asc') 'bg-blue-50'}}"
-            {{on "click" (fn this.orderSelect "asc")}}
+              {{if (isEqual this.args.selectedOrder 'asc') 'bg-blue-50'}}" type="button" {{on "click" (fn this.orderSelect "asc")}}
           >
             <span>Ascending</span>
             {{#if (isEqual this.args.selectedOrder "asc")}}
@@ -100,11 +98,10 @@ export default class SearchDropdown extends Component {
             {{/if}}
           </button>
 
-          <!-- DESC -->
+          {{!-- DESC --}}
           <button
             class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 flex justify-between
-              {{if (isEqual this.args.selectedOrder 'desc') 'bg-blue-50'}}"
-            {{on "click" (fn this.orderSelect "desc")}}
+              {{if (isEqual this.args.selectedOrder 'desc') 'bg-blue-50'}}" type="button" {{on "click" (fn this.orderSelect "desc")}}
           >
             <span>Descending</span>
 

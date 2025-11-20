@@ -7,15 +7,21 @@ export default class ChartCardComponent extends Component {
   }
 
   <template>
-    <div class="bg-white rounded-lg shadow p-6 flex-1">
-      <h3 class="text-lg font-semibold mb-4">{{@data.title}}</h3>
-      <div class="h-64 flex items-center justify-center">
-        <div class="relative w-48 h-48">
-          <canvas class="w-full h-full" {{chart @data}}></canvas>
-          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span class="text-3xl font-bold">{{this.totalTickets}}</span>
-            <span class="text-sm text-gray-500">tickets</span>
-          </div>
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-base font-medium text-gray-900">{{@data.title}}</h3>
+        <button class="text-gray-400 hover:text-gray-600" type="button">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="relative flex items-center justify-center" style="height: 300px; padding: 40px 20px;">
+        <canvas {{chart @data}}></canvas>
+        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style="top: 40px;">
+          <div class="text-5xl font-bold text-gray-900">{{this.totalTickets}}</div>
+          <div class="text-sm text-gray-500 mt-1">tickets</div>
         </div>
       </div>
     </div>
