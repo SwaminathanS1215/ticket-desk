@@ -50,7 +50,7 @@ export default class TableToolbar extends Component {
   }
 
   <template>
-    <div class="flex items-center justify-between py-3">
+    <div class="flex items-center justify-between pb-3">
 
       {{! Left group: Select & Sort }}
       <div class="flex items-center space-x-4">

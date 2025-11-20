@@ -40,7 +40,7 @@ export default class LoginPage extends Component {
     this.session.login({ email: this.email }); // store session user
     this.loading = false;
 
-    this.router.transitionTo('dashboard');
+    this.router.transitionTo('app.dashboard');
   }
 
   // navigate to signup
