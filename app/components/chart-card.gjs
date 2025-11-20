@@ -17,11 +17,11 @@ export default class ChartCardComponent extends Component {
         </button>
       </div>
       
-      <div class="relative flex items-center justify-center" style="height: 300px; padding: 40px 20px;">
+      <div class="relative" style="height: 300px; min-width:300px">
         <canvas {{chart @data}}></canvas>
-        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style="top: 40px;">
-          <div class="text-5xl font-bold text-gray-900">{{this.totalTickets}}</div>
-          <div class="text-sm text-gray-500 mt-1">tickets</div>
+        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+          <div class="text-2xl font-bold text-gray-600">{{this.totalTickets}}</div>
+          <div class="text-sm font-bold text-gray-600 mt-1">tickets</div>
         </div>
       </div>
     </div>

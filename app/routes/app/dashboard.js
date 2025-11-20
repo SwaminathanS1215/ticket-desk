@@ -11,7 +11,7 @@ export default class DashboardRoute extends Route {
         { id: 5, title: 'Unassigned Tickets', count: 8, isAlert: true },
         { id: 6, title: "Tickets I'm Watching", count: 0, isAlert: false },
       ],
-      
+
       charts: [
         {
           id: 'priority',
@@ -19,8 +19,8 @@ export default class DashboardRoute extends Route {
           title: 'Unresolved Tickets by Priority',
           data: [
             { label: 'High', value: 1, color: '#8b5cf6' },
-            { label: 'Medium', value: 3, color: '#f59e0b' },
             { label: 'Low', value: 4, color: '#3b82f6' },
+            { label: 'Medium', value: 3, color: '#f59e0b' },
           ],
         },
         {
