@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 border w-[190px] h-[110px] flex flex-col
+    class="rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 border w-[175px] h-[110px] flex flex-col
       {{if
         @data.isAlert
         'bg-red-50 border-red-200'
