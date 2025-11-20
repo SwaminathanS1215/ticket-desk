@@ -1,5 +1,6 @@
 import Modifier from 'ember-modifier';
 import Chart from 'chart.js/auto';
+import { callback } from 'chart.js/helpers';
 
 export default class ChartModifier extends Modifier {
   chartInstance = null;
@@ -19,17 +20,36 @@ export default class ChartModifier extends Modifier {
           {
             data: chartData.data.map((d) => d.value),
             backgroundColor: chartData.data.map((d) => d.color),
-          }
+            borderWidth: 0,
+            spacing: 2,
+          },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: "60%",
+        cutout: '70%',
         plugins: {
-          legend: { position: "bottom" }
-        }
-      }
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 15,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              font: {
+                size: 12,
+              },
+            },
+          },
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return context.label + ': ' + context.parsed;
+            },
+          },
+        },
+      },
     });
   }
 }
