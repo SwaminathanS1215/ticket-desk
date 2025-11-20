@@ -21,7 +21,7 @@ export default class LayoutSidebar extends Component {
 
           <li>
             <LinkTo
-              @route="dashboard"
+              @route="app.dashboard"
               class="flex items-center gap-3 px-5 py-2 rounded-lg hover:bg-indigo-700 font-medium transition"
             >
               {{this.HomeIcon}}
@@ -33,7 +33,7 @@ export default class LayoutSidebar extends Component {
 
           <li>
             <LinkTo
-              @route="ticket"
+              @route="app.ticket"
               class="flex items-center gap-3 px-5 py-2 rounded-lg hover:bg-indigo-700 font-medium transition"
             >
               {{this.TicketIcon}}
