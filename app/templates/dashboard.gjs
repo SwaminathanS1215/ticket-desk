@@ -6,8 +6,10 @@ import DashboardLayout from '../components/dashboard-layout.gjs';
 export default class DashboardTemplate extends Component {
   <template>
     <DashboardLayout>
-      <MetricsPanel @metrics={{@model.metrics}} />
-      <ChartsPanel @charts={{@model.charts}} />
+      <div class='p-6'>
+        <MetricsPanel @metrics={{@model.metrics}} />
+        <ChartsPanel @charts={{@model.charts}} />
+      </div>
     </DashboardLayout>
   </template>
 }
