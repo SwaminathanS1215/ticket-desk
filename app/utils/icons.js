@@ -65,7 +65,7 @@ export const UserCircleIcon = () =>
     </svg>
 `);
 
-export const MenuIcon =() => {
+export const MenuIcon = () => {
   return htmlSafe(`
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
          fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,4 +73,20 @@ export const MenuIcon =() => {
         d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   `);
-}
+};
+
+export const CreateIcon = () => {
+  return htmlSafe(`  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+       viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 4v16m8-8H4" />
+  </svg>`);
+};
+
+export const TicketLargeIcon = () => {
+  return htmlSafe(`  <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-blue-500" fill="none"
+       viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+          d="M9 7h6m-6 4h6m-6 4h6M4 5h16v4a2 2 0 100 4v4H4v-4a2 2 0 100-4V5z"/>
+  </svg>`);
+};
