@@ -4,6 +4,17 @@ import TableToolbar from 'ticket-desk/components/ticket/tabelToolBar.gjs';
 import FilterSidebarComponent from 'ticket-desk/components/ticket/filterSideBar.gjs';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { fn } from '@ember/helper';
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+
+  let dd = String(date.getDate()).padStart(2, '0');
+  let mm = String(date.getMonth() + 1).padStart(2, '0');
+  let yyyy = date.getFullYear();
+
+  return `${dd}/${mm}/${yyyy}`;
+}
 
 const tabelHeader = [
   {
@@ -13,24 +24,24 @@ const tabelHeader = [
     isCheckbox: true,
   },
   {
-    id: 'subject',
-    title: 'Subject',
-    render: (ticket) => ticket.subject,
+    id: 'title',
+    title: 'Title',
+    render: (ticket) => ticket.title,
   },
   {
-    id: 'requester',
+    id: 'description',
+    title: 'Description',
+    render: (ticket) => ticket.description,
+  },
+  {
+    id: 'user_name',
     title: 'Requester',
-    render: (ticket) => ticket.requester?.name,
-  },
-  {
-    id: 'state',
-    title: 'State',
-    render: (ticket) => ticket.state,
+    render: (ticket) => ticket.user_name,
   },
   {
     id: 'status',
     title: 'Status',
-    render: (ticket) => ticket.ticket_status?.name,
+    render: (ticket) => ticket.status,
   },
   {
     id: 'priority',
@@ -38,14 +49,24 @@ const tabelHeader = [
     render: (ticket) => ticket.priority,
   },
   {
+    id: 'source',
+    title: 'Source',
+    render: (ticket) => ticket.source,
+  },
+  {
     id: 'assigned_to',
     title: 'Assigned To',
     render: (ticket) => ticket.assigned_to,
   },
   {
-    id: 'status_details',
-    title: 'Status Details',
-    render: (ticket) => ticket.status_details,
+    id: 'created_at',
+    title: 'Created At',
+    render: (ticket) => formatDate(ticket.created_at),
+  },
+  {
+    id: 'updated_at',
+    title: 'Updated At',
+    render: (ticket) => formatDate(ticket.updated_at),
   },
 ];
 
@@ -53,7 +74,7 @@ export default class TicketList extends Component {
   constructor() {
     super(...arguments);
     // Or, for specific arguments:
-    console.log('Modal data:', this.args.tableData);
+    console.log('Modal data:', this.args.prevPage);
   }
   @tracked isFilterSidebarVisible = true;
   get createdOptions() {
@@ -86,8 +107,15 @@ export default class TicketList extends Component {
     this.isFilterSidebarVisible = !this.isFilterSidebarVisible;
     console.log('Sidebar Toggled:', this.isFilterSidebarVisible);
   }
-  // console.log("net", @tableData)
-
+  @action
+  prevPage() {
+    console.log('prevvvvvv', this.args?.prevPage);
+    this.args?.prevPage();
+  }
+  @action
+  nextPage() {
+    this.args?.nextPage();
+  }
   <template>
     {{! 3. 👈 Conditional logic and transitions applied in the template }}
     <div class="flex gap-2 justify-between -mr-5">
@@ -99,7 +127,14 @@ export default class TicketList extends Component {
           "w-full transition-all duration-300"
         }}
       >
-        <TableToolbar @toggleFilterSidebar={{this.toggleFilterSidebar}} />
+        <TableToolbar
+          @toggleFilterSidebar={{this.toggleFilterSidebar}}
+          @page={{@pageNumber}}
+          @totalPages={{@totalPagesNumber}}
+          @total={{@totalLength}}
+          @onPrev={{this.prevPage}}
+          @onNext={{this.nextPage}}
+        />
         <TicketTable @tableHeader={{tabelHeader}} @tableData={{@tableData}} />
       </div>
 

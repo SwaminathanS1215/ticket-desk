@@ -13,5 +13,6 @@ Router.map(function () {
   this.route('app', function () {
     this.route('dashboard');
     this.route('ticket');
+    this.route('ticket_details', { path: '/ticket_details/:id' });
   });
 });

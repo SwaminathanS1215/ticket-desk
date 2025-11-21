@@ -26,19 +26,21 @@ export default class TableToolbar extends Component {
     // this.args.onSort?.(event.target.value);
   }
 
-  @action prevPage() {
-    // this.args.onPrev?.();
-  }
+  // @action prevPage() {
+  //   console.log('clicking', this.args.onPrev);
+  //   this.args.onPrev?.();
+  // }
 
-  @action nextPage() {
-    // this.args.onNext?.();
-  }
+  // @action nextPage() {
+  //   this.args.onNext?.();
+  // }
 
   @action exportData() {
     // this.args.onExport?.();
   }
 
   @action filterAction() {
+    console.log('vnmhfhjvhjh');
     this.args.toggleFilterSidebar();
   }
   @action onSortSelect(item) {
@@ -85,29 +87,25 @@ export default class TableToolbar extends Component {
       <div class="flex items-center space-x-3">
         {{! Pagination info }}
         <span class="text-sm text-gray-600">
-          {{this.args.start}}
-          -
-          {{this.args.end}}
+          {{this.args.page}}/{{this.args.totalPages}}
           of
           {{this.args.total}}
         </span>
 
         {{! Prev }}
         <button
-          class="border border-gray-200 p-2 rounded-md disabled:opacity-40"
-          disabled={{this.args.disablePrev}}
-          type="button"
-          {{on "click" this.prevPage}}
+          class="border border-gray-200 p-2 rounded-md disabled:opacity-40" type="button" {{!-- disabled={{this.args.disablePrev}} --}}
+          {{! type="button" }}
+          {{on "click" @onPrev}}
         >
           ←
         </button>
 
         {{! Next }}
         <button
-          class="border border-gray-200 p-2 rounded-md disabled:opacity-40"
-          disabled={{this.args.disableNext}}
-          type="button"
-          {{on "click" this.nextPage}}
+          class="border border-gray-200 p-2 rounded-md disabled:opacity-40" type="button" {{!-- disabled={{this.args.disableNext}} --}}
+          {{! type="button" }}
+          {{on "click" @onNext}}
         >
           →
         </button>

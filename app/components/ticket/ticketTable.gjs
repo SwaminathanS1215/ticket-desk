@@ -1,5 +1,7 @@
 import Component from '@glimmer/component';
 import Checkbox from 'ticket-desk/components/ui/checkbox.gjs'; // <-- ADD THIS
+import isEqual from 'ticket-desk/helpers/is-equal';
+import { LinkTo } from '@ember/routing';
 
 export default class TicketTable extends Component {
   get headers() {
@@ -39,7 +41,17 @@ export default class TicketTable extends Component {
                   {{#if col.isCheckbox}}
                     <Checkbox />
                   {{else}}
-                    {{col.render ticket}}
+                    {{#if (isEqual col.id "title")}}
+                      <LinkTo
+                        @route="app.ticket_details"
+                        @model={{ticket.id}}
+                        class="text-blue-600 underline"
+                      >
+                        {{col.render ticket}}
+                      </LinkTo>
+                    {{else}}
+                      {{col.render ticket}}
+                    {{/if}}
                   {{/if}}
                 </td>
               {{/each}}

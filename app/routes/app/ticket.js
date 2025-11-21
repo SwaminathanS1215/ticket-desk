@@ -1,103 +1,44 @@
 import Route from '@ember/routing/route';
-
-const ticketList = [
-  {
-    status_page_ref_id: null,
-    planned_start_date: null,
-    planned_end_date: null,
-    planned_effort: null,
-    subject: 'test-test',
-    group_id: null,
-    department_id: null,
-    category: null,
-    sub_category: null,
-    item_category: null,
-    requester_id: 30000817499,
-    responder_id: null,
-    due_by: '2025-11-26T17:00:00-05:00',
-    fr_escalated: false,
-    deleted: false,
-    spam: false,
-    email_config_id: null,
-    fwd_emails: [],
-    reply_cc_emails: [],
-    cc_emails: [],
-    is_escalated: false,
-    fr_due_by: '2025-11-19T14:00:00-05:00',
-    id: 7,
-    priority: 1,
-    status: 2,
-    source: 3,
-    created_at: '2025-11-17T01:22:17-05:00',
-    updated_at: '2025-11-17T01:22:17-05:00',
-    workspace_id: 2,
-    type: 'Incident',
-    custom_fields: {
-      major_incident_type: null,
-      business_impact: null,
-      impacted_locations: null,
-      no_of_customers_impacted: null,
-    },
-    requester: {
-      avatar_url:
-        'https://wissentechnology-908576784899445942.myfreshworks.com/api/v2/users/908585091878225052/image?variant=SMALL',
-      deleted: false,
-      email: 'rajesh.jayarama@wissen.com',
-      forgotten: false,
-      helpdesk_agent: true,
-      id: 30000817499,
-      job_title: null,
-      location_id: null,
-      location_name: null,
-      mobile: null,
-      name: 'Rajesh jayarama',
-      phone: null,
-      vip_user: false,
-    },
-    stats: {
-      created_at: '2025-11-17T01:22:17-05:00',
-      updated_at: '2025-11-17T01:22:17-05:00',
-      ticket_id: 30001556618,
-      opened_at: null,
-      group_escalated: false,
-      inbound_count: 1,
-      status_updated_at: '2025-11-17T01:22:17-05:00',
-      outbound_count: 0,
-      pending_since: null,
-      resolved_at: null,
-      closed_at: null,
-      first_assigned_at: null,
-      assigned_at: null,
-      agent_responded_at: null,
-      requester_responded_at: null,
-      first_responded_at: null,
-      first_resp_time_in_secs: null,
-      resolution_time_in_secs: null,
-    },
-    tasks_dependency_type: 0,
-    human_display_id: 'INC-7',
-    display_id: 7,
-    closed_at: null,
-    is_editable: true,
-    urgency: 1,
-    impact: 1,
-    state: 'new',
-    email_failure: false,
-    responder: {},
-    group: {},
-    ticket_status: {
-      id: 30000030165,
-      created_at: '2025-11-11T23:39:48-05:00',
-      updated_at: '2025-11-11T23:39:48-05:00',
-      status_id: 2,
-      name: 'Open',
-    },
-    route_iq_agent_suggestion_not_applied: false,
-  },
-];
+import { service } from '@ember/service';
+import { action } from '@ember/object';
 
 export default class TicketRoute extends Route {
   model() {
-    return ticketList;
+    const ticketList = [
+      // ... your 27 ticket objects here (copied from original) ...
+      {
+        id: 1,
+        created_at: '2025-11-20T08:34:18.791Z',
+        description: 'logging issue',
+        priority: 'low',
+        source: 'phone',
+        status: 'resolved',
+        ticket_id: '1',
+        title: 'Title1',
+        updated_at: '2025-11-20T08:34:18.791Z',
+        user_name: 'Person1',
+      },
+      {
+        id: 2,
+        created_at: '2025-11-20T08:34:18.791Z',
+        description: 'logging issue',
+        priority: 'low',
+        source: 'phone',
+        status: 'resolved',
+        ticket_id: '2',
+        title: 'Title1',
+        updated_at: '2025-11-20T08:34:18.791Z',
+        user_name: 'Person1',
+      },
+    ];
+
+    const modelObject = {
+      tickets: ticketList,
+    };
+
+    // Check what the route returns
+    console.log('Route Model Data:', modelObject);
+
+    return modelObject;
   }
 }
