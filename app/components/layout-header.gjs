@@ -5,7 +5,7 @@ import { on } from '@ember/modifier';
 import UserDropdown from './user-dropdown.gjs';
 import NotificationBell from './notification-bell.gjs';
 import { MenuIcon } from '../utils/icons.js';
-
+import CreateMenu from './create-menu.gjs';
 
 export default class LayoutHeader extends Component {
   @service session;
@@ -19,8 +19,7 @@ export default class LayoutHeader extends Component {
 
   <template>
     <header
-      class="fixed top-0 left-0 right-0 h-16 bg-indigo-700 text-white 
-             flex items-center justify-between px-6 shadow z-40 pl-3"
+      class="fixed top-0 left-0 right-0 h-16 bg-indigo-700 text-white flex items-center justify-between px-6 shadow z-40 pl-3"
     >
       <div class="flex items-center gap-4">
         <button
@@ -32,7 +31,8 @@ export default class LayoutHeader extends Component {
         </button>
         <h1 class="text-xl font-bold">Ticket Desk</h1>
       </div>
-      <div class="flex items-center gap-6">
+      <div class="flex items-center gap-4">
+        <CreateMenu data-create-menu />
         <NotificationBell />
         {{#if this.session.isAuthenticated}}
           <UserDropdown @user={{this.session.user}} />
