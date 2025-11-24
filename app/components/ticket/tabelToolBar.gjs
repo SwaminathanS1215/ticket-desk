@@ -2,8 +2,8 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { tracked } from '@glimmer/tracking';
-
 import SearchDropdown from 'ticket-desk/components/ticket/searchDropDown.gjs';
+import isEqual from 'ticket-desk/helpers/is-equal';
 
 export default class TableToolbar extends Component {
   sortFields = [
@@ -25,15 +25,6 @@ export default class TableToolbar extends Component {
   @action handleSort(event) {
     // this.args.onSort?.(event.target.value);
   }
-
-  // @action prevPage() {
-  //   console.log('clicking', this.args.onPrev);
-  //   this.args.onPrev?.();
-  // }
-
-  // @action nextPage() {
-  //   this.args.onNext?.();
-  // }
 
   @action exportData() {
     // this.args.onExport?.();
@@ -88,14 +79,15 @@ export default class TableToolbar extends Component {
         {{! Pagination info }}
         <span class="text-sm text-gray-600">
           {{this.args.page}}/{{this.args.totalPages}}
-          of
+          total
           {{this.args.total}}
         </span>
 
         {{! Prev }}
         <button
-          class="border border-gray-200 p-2 rounded-md disabled:opacity-40" type="button" {{!-- disabled={{this.args.disablePrev}} --}}
-          {{! type="button" }}
+          class="px-4 py-2 rounded-md border-2 hover:cursor-pointer border-gray-300 bg-transparent text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+          type="button"
+          disabled={{isEqual this.args.page 1}}
           {{on "click" @onPrev}}
         >
           ←
@@ -103,7 +95,10 @@ export default class TableToolbar extends Component {
 
         {{! Next }}
         <button
-          class="border border-gray-200 p-2 rounded-md disabled:opacity-40" type="button" {{!-- disabled={{this.args.disableNext}} --}}
+          class="px-4 py-2 rounded-md border-2 hover:cursor-pointer border-gray-300 bg-transparent text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+          type="button"
+          {{!-- disabled={{this.args.disableNext}} --}}
+          disabled={{isEqual this.args.page this.args.totalPages}}
           {{! type="button" }}
           {{on "click" @onNext}}
         >
