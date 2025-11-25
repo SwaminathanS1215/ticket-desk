@@ -7,6 +7,7 @@ import { service } from '@ember/service';
 export default class UserDropdown extends Component {
   @service router;
   @service session;
+  @service auth;
 
   @tracked isOpen = false;
 
@@ -23,9 +24,9 @@ export default class UserDropdown extends Component {
     this.isOpen = false;
   }
 
-  @action logout() {
-    this.session.logout();
+  @action async logout() {
     this.isOpen = false;
+    await this.auth.logout();
     this.router.transitionTo('index');
   }
 
@@ -39,33 +40,38 @@ export default class UserDropdown extends Component {
         />
         <span class="font-medium">{{this.userName}}</span>
 
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M19 9l-7 7-7-7" />
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
       {{#if this.isOpen}}
-        <div class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg py-2 border z-50">
+        <div
+          class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg py-2 border z-50"
+        >
 
-          <button class="block w-full text-left px-4 py-2 hover:bg-gray-100" type="button" {{on "click" this.closeMenu}}>
+          <button
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+            type="button"
+            {{on "click" this.closeMenu}}
+          >
             Profile
           </button>
 
-          <button class="block w-full text-left px-4 py-2 hover:bg-gray-100" type="button" {{on "click" this.closeMenu}}>
+          <button
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+            type="button"
+            {{on "click" this.closeMenu}}
+          >
             Settings
           </button>
 
           <hr class="my-1" />
 
           <button
-            class="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600" type="button" {{on "click" this.logout}}
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+            type="button"
+            {{on "click" this.logout}}
           >
             Logout
           </button>

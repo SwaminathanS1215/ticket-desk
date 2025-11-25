@@ -6,14 +6,12 @@ import { on } from '@ember/modifier';
 
 export default class LoginPage extends Component {
   @service router;
-  @service session;
 
   @tracked email = '';
   @tracked password = '';
   @tracked loading = false;
   @tracked error = '';
 
-  // input handlers
   @action updateEmail(e) {
     this.email = e.target.value;
   }
@@ -22,28 +20,31 @@ export default class LoginPage extends Component {
     this.password = e.target.value;
   }
 
-  // LOGIN SUBMIT
-  @action async handleSubmit(e) {
+  @action
+  async handleSubmit(e) {
     e.preventDefault();
     this.error = '';
 
-    if (!this.email || !this.password) {
+    if (!this.email.trim() || !this.password.trim()) {
       this.error = 'Email and password are required.';
       return;
     }
 
+    if (typeof this.args.onSubmit !== 'function') {
+      this.error = 'Login action not provided';
+      return;
+    }
+
     this.loading = true;
-
-    // Fake API call
-    await new Promise((r) => setTimeout(r, 700));
-
-    this.session.login({ email: this.email }); // store session user
-    this.loading = false;
-
-    this.router.transitionTo('app.dashboard');
+    try {
+      await this.args.onSubmit({ email: this.email, password: this.password });
+    } catch (err) {
+      this.error = err.message || 'Login failed';
+    } finally {
+      this.loading = false;
+    }
   }
 
-  // navigate to signup
   @action goToSignup() {
     this.router.transitionTo('signup');
   }
@@ -51,10 +52,13 @@ export default class LoginPage extends Component {
   <template>
     <div class="min-h-screen w-[500px] grid place-items-center bg-gray-100 px-4">
       <div class="w-full max-w-2xl bg-white shadow-2xl p-12 rounded-2xl">
+        <h2 class="text-2xl font-bold text-center mb-6 text-indigo-700">Login</h2>
 
-        <h2 class="text-2xl font-bold text-center mb-6 text-indigo-700">
-          Login
-        </h2>
+        {{#if this.args.error}}
+          <div class="mb-4 p-3 text-sm bg-red-100 text-red-700 rounded">
+            {{this.args.error}}
+          </div>
+        {{/if}}
 
         {{#if this.error}}
           <div class="mb-4 p-3 text-sm bg-red-100 text-red-700 rounded">
@@ -63,7 +67,6 @@ export default class LoginPage extends Component {
         {{/if}}
 
         <form {{on "submit" this.handleSubmit}} class="space-y-4">
-
           <div>
             <label class="block text-sm font-medium mb-1">Email</label>
             <input
@@ -103,7 +106,6 @@ export default class LoginPage extends Component {
             Create one here
           </span>
         </p>
-
       </div>
     </div>
   </template>
