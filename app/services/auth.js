@@ -1,28 +1,22 @@
 import Service from '@ember/service';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class AuthService extends Service {
   @service session;
+  @service api; 
 
   pendingRefresh = null;
 
   async login(email, password) {
-    const res = await fetch('http://localhost:3000/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+    const data = await this.api.postJson('/auth/login', {
+      email,
+      password,
     });
 
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      throw new Error(data.message || 'Login failed');
-    }
-
     this.session.login({
-      token: data.token,
-      refreshToken: data.refreshToken,
-      user: data.user,
+      token: data.access_token,
+      refreshToken: data.refresh_token,
+      role: data.role,
     });
 
     return data;
@@ -40,21 +34,13 @@ export default class AuthService extends Service {
           throw new Error('No refresh token available');
         }
 
-        const res = await fetch('http://localhost:3000/auth/refresh', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refreshToken }),
+        const data = await this.api.postJson('/auth/refresh', {
+          refreshToken,
         });
 
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          this.session.logout();
-          throw new Error(data.message || 'Refresh failed');
-        }
-
         this.session.setToken({
-          token: data.token,
-          refreshToken: data.refreshToken,
+          token: data.access_token,
+          refreshToken: data.refresh_token,
         });
 
         return data;
@@ -68,14 +54,7 @@ export default class AuthService extends Service {
 
   async logout() {
     try {
-      const token = this.session.token;
-      await fetch('http://localhost:3000/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
+      await this.api.postJson('/auth/logout', {});
     } catch (e) {
       console.error('Logout failed', e);
     } finally {

@@ -6,7 +6,7 @@ export default class AppCreateTicketController extends Controller {
   @service api;
 
   async createTicket(form) {
-    await this.api.postJson('http://localhost:3000/api/version1/tickets', form);
+    await this.api.postJson('/api/version1/tickets', form);
     this.router.transitionTo('app.ticket');
   }
 }

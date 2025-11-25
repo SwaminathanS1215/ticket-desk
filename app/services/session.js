@@ -3,62 +3,69 @@ import { tracked } from '@glimmer/tracking';
 
 const STORAGE_TOKEN = 'auth_token';
 const STORAGE_REFRESH = 'auth_refresh';
-const STORAGE_USER = 'auth_user';
+const STORAGE_ROLE = 'auth_role';
 
 export default class SessionService extends Service {
-  @tracked isAuthenticated = false;
-  @tracked user = null;
   @tracked token = null;
   @tracked refreshToken = null;
+  @tracked role = null;
+
+  get isAuthenticated() {
+    return Boolean(this.token);
+  }
 
   constructor() {
     super(...arguments);
+
     try {
       const token = localStorage.getItem(STORAGE_TOKEN);
       const refresh = localStorage.getItem(STORAGE_REFRESH);
-      const userJson = localStorage.getItem(STORAGE_USER);
+      const role = localStorage.getItem(STORAGE_ROLE);
 
       if (token) {
         this.token = token;
         this.refreshToken = refresh;
-        this.user = userJson ? JSON.parse(userJson) : null;
-        this.isAuthenticated = true;
+        this.role = role || null;
       }
     } catch (e) {
       console.error('Failed to initialize session from storage', e);
     }
   }
 
-  login({ token, refreshToken, user }) {
+  login({ token, refreshToken, role }) {
     this.token = token;
     this.refreshToken = refreshToken;
-    this.user = user || null;
-    this.isAuthenticated = !!token;
+    this.role = role || null;
 
     localStorage.setItem(STORAGE_TOKEN, token);
     localStorage.setItem(STORAGE_REFRESH, refreshToken);
-    if (user) {
-      localStorage.setItem(STORAGE_USER, JSON.stringify(user));
-    }
+    localStorage.setItem(STORAGE_ROLE, this.role);
   }
 
-  setToken({ token, refreshToken }) {
-    this.token = token;
+  setToken({ token, refreshToken, role }) {
+    if (token) {
+      this.token = token;
+      localStorage.setItem(STORAGE_TOKEN, token);
+    }
+
     if (refreshToken) {
       this.refreshToken = refreshToken;
       localStorage.setItem(STORAGE_REFRESH, refreshToken);
     }
-    if (token) localStorage.setItem(STORAGE_TOKEN, token);
-    this.isAuthenticated = !!this.token;
+
+    if (role) {
+      this.role = role;
+      localStorage.setItem(STORAGE_ROLE, role);
+    }
   }
 
   logout() {
-    this.isAuthenticated = false;
-    this.user = null;
     this.token = null;
     this.refreshToken = null;
+    this.role = null;
+
     localStorage.removeItem(STORAGE_TOKEN);
     localStorage.removeItem(STORAGE_REFRESH);
-    localStorage.removeItem(STORAGE_USER);
+    localStorage.removeItem(STORAGE_ROLE);
   }
 }
