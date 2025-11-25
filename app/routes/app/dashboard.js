@@ -1,27 +1,21 @@
 import Route from '@ember/routing/route';
+import { service } from '@ember/service';
 
 export default class DashboardRoute extends Route {
+  @service api; 
+  
   async model() {
     try {
-      const [metricsRes, chartsRes] = await Promise.all([
-        fetch('http://localhost:3000/api/version1/dashboard/summary'),
-        fetch('http://localhost:3000/api/version1/dashboard/charts')
+      const [metricsData, chartsData] = await Promise.all([
+        this.api.getJson('/api/version1/dashboard/summary'),
+        this.api.getJson('/api/version1/dashboard/charts')
       ]);
-
-      if (!metricsRes.ok) {
-        throw new Error(`Metrics API failed: ${metricsRes.status}`);
-      }
-      if (!chartsRes.ok) {
-        throw new Error(`Charts API failed: ${chartsRes.status}`);
-      }
-
-      const metricsData = await metricsRes.json();
-      const chartsData = await chartsRes.json();
 
       return {
         metrics: metricsData.metrics,
         charts: chartsData.charts
       };
+
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
 
