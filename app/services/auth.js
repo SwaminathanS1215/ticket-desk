@@ -17,6 +17,7 @@ export default class AuthService extends Service {
       token: data.access_token,
       refreshToken: data.refresh_token,
       role: data.role,
+      email: email
     });
 
     return data;

@@ -13,24 +13,19 @@ const tabelHeader = [
     isCheckbox: true,
   },
   {
-    id: 'subject',
-    title: 'Subject',
-    render: (ticket) => ticket.subject,
+    id: 'title',
+    title: 'Title',
+    render: (ticket) => ticket.title,
   },
   {
-    id: 'requester',
+    id: 'user_name',
     title: 'Requester',
-    render: (ticket) => ticket.requester?.name,
-  },
-  {
-    id: 'state',
-    title: 'State',
-    render: (ticket) => ticket.state,
+    render: (ticket) => ticket?.user_name,
   },
   {
     id: 'status',
     title: 'Status',
-    render: (ticket) => ticket.ticket_status?.name,
+    render: (ticket) => ticket.status,
   },
   {
     id: 'priority',
@@ -41,11 +36,6 @@ const tabelHeader = [
     id: 'assigned_to',
     title: 'Assigned To',
     render: (ticket) => ticket.assigned_to,
-  },
-  {
-    id: 'status_details',
-    title: 'Status Details',
-    render: (ticket) => ticket.status_details,
   },
 ];
 
