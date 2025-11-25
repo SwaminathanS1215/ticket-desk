@@ -6,7 +6,7 @@ export default class BarChartCardComponent extends Component {
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-base font-semibold text-gray-800">{{@data.title}}</h3>
-        <button class="text-gray-400 hover:text-gray-600 p-1">
+        <button class="text-gray-400 hover:text-gray-600 p-1" type="button">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
               d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
