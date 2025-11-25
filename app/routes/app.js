@@ -7,7 +7,7 @@ export default class AppRoute extends Route {
 
   beforeModel() {
     if (!this.session.isAuthenticated) {
-      this.router.transitionTo('index');
+      this.router.transitionTo('/');
     }
   }
 }
