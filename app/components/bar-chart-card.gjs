@@ -26,12 +26,12 @@ export default class BarChartCardComponent extends Component {
             </div>
 
             <div class="flex items-center w-full">
-              <div class="relative w-full h-3 bg-gray-200 rounded-full">
+              <div class="relative w-full h-3 bg-gray-200 rounded-full overflow-hidden">
 
                 <div
                   class="absolute h-3 rounded-full"
                   style="
-                width: calc({{item.value}} * 25%);
+                    width: min({{item.value}}0%, 100%);
                 background: linear-gradient(to right, #ec4899, #a855f7, #8b5cf6);
               "
                 >

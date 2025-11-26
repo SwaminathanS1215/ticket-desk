@@ -8,6 +8,11 @@ export default class ApiService extends Service {
 
   apiHost = config.APP.apiHost;
 
+  constructor() {
+    super(...arguments);
+    console.log('ApiService LOADED');
+  }
+
   buildUrl(path) {
     if (path.startsWith('http')) return path;
     return `${this.apiHost}${path}`;

@@ -1,17 +1,19 @@
 import Route from '@ember/routing/route';
 import { STATUS_OPTIONS, PRIORITY_OPTIONS, SOURCE_OPTIONS } from '../../constants';
-
+import { service } from '@ember/service';
 export default class AppCreateTicketRoute extends Route {
+  @service session;
+
   model() {
     return {
-      requestor: '',
+      user_name: this.session.email || '',
       title: '',
       description: '',
       statusOptions: STATUS_OPTIONS,
       priorityOptions: PRIORITY_OPTIONS,
       sourceOptions: SOURCE_OPTIONS,
-      status: STATUS_OPTIONS[0],
-      priority: PRIORITY_OPTIONS[0],
+      status: STATUS_OPTIONS[0].value,
+      priority: PRIORITY_OPTIONS[0].value,
       source: SOURCE_OPTIONS[0],
     };
   }
