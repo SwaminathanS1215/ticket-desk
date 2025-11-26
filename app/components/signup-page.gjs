@@ -58,7 +58,7 @@ export default class SignupPage extends Component {
   }
 
   @action goToLogin() {
-    this.router.transitionTo('index');
+    this.router.transitionTo('/');
   }
 
   <template>
