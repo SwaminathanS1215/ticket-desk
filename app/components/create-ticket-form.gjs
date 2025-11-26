@@ -8,7 +8,7 @@ export default class CreateTicketForm extends Component {
   @tracked form = { ...this.args.formData };
 
   @tracked errors = {
-    requestor: '',
+    user_name: '',
     title: '',
     description: '',
     status: '',
@@ -18,7 +18,7 @@ export default class CreateTicketForm extends Component {
 
   validate() {
     let newErrors = {
-      requestor: '',
+      user_name: '',
       title: '',
       description: '',
       status: '',
@@ -26,14 +26,14 @@ export default class CreateTicketForm extends Component {
 
     let valid = true;
 
-    if (!this.form.requestor?.trim()) {
-      newErrors.requestor = 'Requestor is required';
+    if (!this.form.user_name?.trim()) {
+      newErrors.user_name = 'Requestor is required';
       valid = false;
     }
 
     if (!this.form.title?.trim()) {
       newErrors.title = 'Title is required';
-      
+
       valid = false;
     }
 
@@ -83,14 +83,13 @@ export default class CreateTicketForm extends Component {
           <label class="font-medium">Requestor <span class="text-red-500">*</span></label>
           <input
             type="text"
-            value={{this.form.requestor}}
-            {{on "input" (fn this.updateField "requestor")}}
-
-            class="w-full border px-3 py-2 rounded {{if this.errors.requestor 'border-red-500'}}"
+            value={{this.form.user_name}}
+            {{on "input" (fn this.updateField "user_name")}}
+            class="w-full border px-3 py-2 rounded {{if this.errors.user_name 'border-red-500'}}"
           />
 
-          {{#if this.errors.requestor}}
-            <p class="text-xs text-red-600 mt-1">{{this.errors.requestor}}</p>
+          {{#if this.errors.user_name}}
+            <p class="text-xs text-red-600 mt-1">{{this.errors.user_name}}</p>
           {{/if}}
         </div>
         <div>
@@ -110,7 +109,8 @@ export default class CreateTicketForm extends Component {
           <textarea
             value={{this.form.description}}
             {{on "input" (fn this.updateField "description")}}
-            class="w-full border px-3 py-2 rounded h-32 {{if this.errors.description 'border-red-500'}}"
+            class="w-full border px-3 py-2 rounded h-32
+              {{if this.errors.description 'border-red-500'}}"
           ></textarea>
           {{#if this.errors.description}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.description}}</p>
@@ -124,8 +124,8 @@ export default class CreateTicketForm extends Component {
             class="w-full border px-3 py-2 rounded {{if this.errors.status 'border-red-500'}}"
           >
             <option value="">Select status</option>
-            {{#each @formData.statusOptions as |opt|}}
-              <option value={{opt}}>{{opt}}</option>
+            {{#each @formData.statusOptions as |s|}}
+              <option value={{s.value}}>{{s.label}}</option>
             {{/each}}
           </select>
 
@@ -140,8 +140,8 @@ export default class CreateTicketForm extends Component {
             {{on "input" (fn this.updateField "priority")}}
             class="w-full border px-3 py-2 rounded"
           >
-            {{#each @formData.priorityOptions as |opt|}}
-              <option value={{opt}}>{{opt}}</option>
+            {{#each @formData.priorityOptions as |s|}}
+              <option value={{s.value}}>{{s.label}}</option>
             {{/each}}
           </select>
         </div>

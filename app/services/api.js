@@ -8,6 +8,11 @@ export default class ApiService extends Service {
 
   apiHost = config.APP.apiHost;
 
+  constructor() {
+    super(...arguments);
+    console.log('ApiService LOADED');
+  }
+
   buildUrl(path) {
     if (path.startsWith('http')) return path;
     return `${this.apiHost}${path}`;
@@ -56,7 +61,6 @@ export default class ApiService extends Service {
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       throw new Error(data?.error || `Request failed: ${res.status}`);
-
     }
     return res.json();
   }
