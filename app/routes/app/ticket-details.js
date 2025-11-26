@@ -1,14 +1,16 @@
 import Route from '@ember/routing/route';
+import { service } from '@ember/service';
 
 export default class TicketDetailsRoute extends Route {
-  async model(params) {
-    // Get id from URL
-    let { id } = params;
+  @service api;
 
+  async model(params) {
+    let { id } = params;
+    const response = await this.api.getJson(`/api/version1/tickets/${id}`);
     // Example: API call to fetch ticket details
     // let response = await fetch(`/api/tickets/${id}`);
     // let ticket = await response.json();
-    console.log('id', id);
+    console.log('response', response);
 
     // Return the ticket data to template
     return {

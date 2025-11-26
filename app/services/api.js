@@ -56,7 +56,17 @@ export default class ApiService extends Service {
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       throw new Error(data?.error || `Request failed: ${res.status}`);
+    }
+    return res.json();
+  }
 
+  async deleteTicket(path, id) {
+    const res = await this.request(path, {
+      method: 'DELETE',
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data?.error || `Request failed: ${res.status}`);
     }
     return res.json();
   }

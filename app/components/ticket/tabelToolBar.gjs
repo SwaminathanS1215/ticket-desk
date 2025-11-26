@@ -4,6 +4,7 @@ import { on } from '@ember/modifier';
 import { tracked } from '@glimmer/tracking';
 import SearchDropdown from 'ticket-desk/components/ticket/searchDropDown.gjs';
 import isEqual from 'ticket-desk/helpers/is-equal';
+import { fn } from '@ember/helper';
 
 export default class TableToolbar extends Component {
   sortFields = [
@@ -16,11 +17,6 @@ export default class TableToolbar extends Component {
   ];
   @tracked selectedSort = null;
   @tracked selectedOrder = 'asc';
-
-  // Trigger parent events
-  @action handleSelectAll(event) {
-    // this.args.onSelectAll?.(event.target.checked);
-  }
 
   @action handleSort(event) {
     // this.args.onSort?.(event.target.value);
@@ -42,6 +38,13 @@ export default class TableToolbar extends Component {
     this.selectedOrder = item;
   }
 
+  @action setupSelectAll(element) {
+    element.indeterminate = this.args.isPartialSelected;
+  }
+  @action handleSelectAll(event) {
+    this.args.onSelectAll?.(event.target.checked);
+  }
+
   <template>
     <div class="flex items-center justify-between pb-3">
 
@@ -52,12 +55,14 @@ export default class TableToolbar extends Component {
         <label class="flex items-center space-x-2 cursor-pointer">
           <input
             type="checkbox"
-            class="h-4 w-4 border-gray-300 rounded"
+            class="h-4 w-4 border-gray-300 rounded cursor-pointer"
+            checked={{@isAllSelected}}
             {{on "change" this.handleSelectAll}}
           />
-          <span class="text-sm text-gray-700">Select all</span>
+          <span class="text-sm text-gray-700">
+            Select all
+          </span>
         </label>
-
         <span class="text-gray-300">|</span>
 
         {{! Sort dropdown }}

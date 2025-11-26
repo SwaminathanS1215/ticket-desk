@@ -77,14 +77,10 @@ export default class TicketList extends Component {
     console.log('Modal data:', this.args.prevPage);
   }
   @tracked isFilterSidebarVisible = true;
+  @tracked selectedTickets = new Set();
+
   get createdOptions() {
-    return [
-      'Last 6 months',
-      'Last 3 months',
-      'Last month',
-      'Last week',
-      'Custom',
-    ];
+    return ['Last 6 months', 'Last 3 months', 'Last month', 'Last week', 'Custom'];
   }
 
   get priorityOptions() {
@@ -102,6 +98,18 @@ export default class TicketList extends Component {
   get typeOptions() {
     return ['Incident', 'Service Request', 'Major Incident'];
   }
+
+  get isAllSelected() {
+    return this.selectedTickets.size === this.args.tableData.length;
+  }
+
+  get isNoneSelected() {
+    return this.selectedTickets.size === 0;
+  }
+
+  get isPartialSelected() {
+    return !this.isNoneSelected && !this.isAllSelected;
+  }
   @action
   toggleFilterSidebar() {
     this.isFilterSidebarVisible = !this.isFilterSidebarVisible;
@@ -116,6 +124,41 @@ export default class TicketList extends Component {
   nextPage() {
     this.args?.nextPage();
   }
+
+  @action toggleTicketSelection(ticketId, isChecked) {
+    if (isChecked) {
+      this.selectedTickets.add(ticketId);
+    } else {
+      this.selectedTickets.delete(ticketId);
+    }
+    this.selectedTickets = new Set(this.selectedTickets); // trigger re-render
+  }
+
+  // When toolbar select-all is clicked
+  @action toggleSelectAll(isChecked) {
+    if (isChecked) {
+      this.selectedTickets = new Set(this.args.tableData.map((t) => t.ticket_id));
+    } else {
+      this.selectedTickets = new Set();
+    }
+  }
+
+  @action async handleDelete(ticketId) {
+    try {
+      console.log('Ticket deleted successfully:', ticketId);
+      this.selectedTickets.delete(ticketId);
+      this.selectedTickets = new Set(this.selectedTickets);
+      await this.args.onDelete?.(ticketId);
+    } catch (error) {
+      console.error('Error deleting ticket:', error);
+      alert('An error occurred while deleting the ticket.');
+    }
+  }
+
+  @action handleEdit(ticket) {
+    console.log('Edit ticket:', ticket);
+  }
+
   <template>
     {{! 3. 👈 Conditional logic and transitions applied in the template }}
     <div class="flex gap-2 justify-between -mr-5">
@@ -134,8 +177,17 @@ export default class TicketList extends Component {
           @total={{@totalLength}}
           @onPrev={{this.prevPage}}
           @onNext={{this.nextPage}}
+          @isAllSelected={{this.isAllSelected}}
+          @isPartialSelected={{this.isPartialSelected}}
+          @onSelectAll={{this.toggleSelectAll}}
         />
-        <TicketTable @tableHeader={{tabelHeader}} @tableData={{@tableData}} />
+        <TicketTable
+          @tableHeader={{tabelHeader}}
+          @tableData={{@tableData}}
+          @selectedRows={{this.selectedTickets}}
+          @onRowSelect={{this.toggleTicketSelection}}
+          @onDelete={{this.handleDelete}}
+        />
       </div>
 
       {{! Sidebar: Apply transition and conditional classes for width/hidden state }}

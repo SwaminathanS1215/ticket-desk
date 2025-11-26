@@ -10,6 +10,7 @@ export default class TicketTemplate extends Component {
       @totalLength={{@controller.totalTickets}}
       @prevPage={{@controller.prevPage}}
       @nextPage={{@controller.nextPage}}
+      @onDelete={{@controller.deleteTicket}}
     />
   </template>
 }
