@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
+import isEqual from 'ticket-desk/helpers/is-equal';
 
 export default class CreateTicketForm extends Component {
   @tracked form = { ...this.args.formData };
@@ -75,7 +76,11 @@ export default class CreateTicketForm extends Component {
   <template>
     <div class="max-w-3xl p-8 bg-white shadow-lg rounded-xl">
       <h1 class="text-2xl font-semibold mb-6 text-gray-800">
-        New Ticket
+        {{#if @isEdit}}
+          Update #{{@formData.ticket_id}}
+        {{else}}
+          New Ticket
+        {{/if}}
       </h1>
 
       <form {{on "submit" this.submit}} class="space-y-6">
@@ -120,12 +125,15 @@ export default class CreateTicketForm extends Component {
           <label class="font-medium">Status <span class="text-red-500">*</span></label>
           <select
             value={{this.form.status}}
-            {{on "input" (fn this.updateField "status")}}
+            {{on "change" (fn this.updateField "status")}}
             class="w-full border px-3 py-2 rounded {{if this.errors.status 'border-red-500'}}"
           >
             <option value="">Select status</option>
             {{#each @formData.statusOptions as |s|}}
-              <option value={{s.value}}>{{s.label}}</option>
+              <option
+                selected={{isEqual this.form.status s.value}}
+                value={{s.value}}
+              >{{s.label}}</option>
             {{/each}}
           </select>
 
@@ -141,7 +149,10 @@ export default class CreateTicketForm extends Component {
             class="w-full border px-3 py-2 rounded"
           >
             {{#each @formData.priorityOptions as |s|}}
-              <option value={{s.value}}>{{s.label}}</option>
+              <option
+                value={{s.value}}
+                selected={{isEqual this.form.priority s.value}}
+              >{{s.label}}</option>
             {{/each}}
           </select>
         </div>
@@ -150,10 +161,10 @@ export default class CreateTicketForm extends Component {
           <select
             value={{this.form.source}}
             {{on "input" (fn this.updateField "source")}}
-            class="w-full border px-3 py-2 rounded"
+            class="w-full border px-3 py-2 rounded capitalize"
           >
             {{#each @formData.sourceOptions as |opt|}}
-              <option value={{opt}}>{{opt}}</option>
+              <option value={{opt}} selected={{isEqual this.form.source opt}}>{{opt}}</option>
             {{/each}}
           </select>
         </div>

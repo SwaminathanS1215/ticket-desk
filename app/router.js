@@ -15,5 +15,6 @@ Router.map(function () {
     this.route('ticket');
     this.route('ticket_details', { path: '/ticket_details/:id' });
     this.route('create-ticket');
+    this.route('update-ticket', { path: '/update_ticket/:id' });
   });
 });

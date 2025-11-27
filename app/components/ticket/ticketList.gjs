@@ -5,6 +5,7 @@ import FilterSidebarComponent from 'ticket-desk/components/ticket/filterSideBar.
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { fn } from '@ember/helper';
+import { service } from '@ember/service';
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -71,6 +72,8 @@ const tabelHeader = [
 ];
 
 export default class TicketList extends Component {
+  @service router;
+
   constructor() {
     super(...arguments);
     // Or, for specific arguments:
@@ -155,8 +158,14 @@ export default class TicketList extends Component {
     }
   }
 
-  @action handleEdit(ticket) {
-    console.log('Edit ticket:', ticket);
+  @action
+  handleEdit(ticket) {
+    console.log('handleEdit', ticket, this.router.transitionTo);
+    // Correct way for Ember with state
+    this.router.transitionTo(
+      'app.update-ticket', // Route name must match your router.js definition
+      ticket.ticket_id // Dynamic segment param
+    );
   }
 
   <template>
@@ -187,6 +196,7 @@ export default class TicketList extends Component {
           @selectedRows={{this.selectedTickets}}
           @onRowSelect={{this.toggleTicketSelection}}
           @onDelete={{this.handleDelete}}
+          @onEdit={{this.handleEdit}}
         />
       </div>
 

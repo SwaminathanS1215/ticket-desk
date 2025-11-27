@@ -105,7 +105,7 @@ export default class TicketTable extends Component {
                   {{! Edit Button }}
                   <button
                     type="button"
-                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors cursor-pointer"
                     title="Edit"
                     {{on "click" (fn this.handleEdit ticket)}}
                   >
@@ -122,7 +122,7 @@ export default class TicketTable extends Component {
                   {{! Delete Button }}
                   <button
                     type="button"
-                    class="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                    class="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
                     title="Delete"
                     {{on "click" (fn this.openDeleteModal ticket)}}
                   >

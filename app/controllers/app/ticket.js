@@ -60,7 +60,7 @@ export default class AppTicketController extends Controller {
   async deleteTicket(ticketId) {
     try {
       // Call DELETE API
-      await this.api.deleteJson(`/api/version1/tickets/${ticketId}`);
+      await this.api.deleteTicket(`/api/version1/tickets/${ticketId}`);
 
       console.log('Ticket deleted successfully:', ticketId);
 
