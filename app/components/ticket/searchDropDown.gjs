@@ -25,7 +25,7 @@ export default class SearchDropdown extends Component {
   }
 
   @action selectItem(item) {
-    console.log('item', item);
+    console.log('selectItem', item);
     this.args.onSelect?.(item);
     this.isOpen = false;
   }
@@ -35,6 +35,7 @@ export default class SearchDropdown extends Component {
   }
 
   @action updateSearch(e) {
+    console.log('selectItem', e.target.value);
     this.search = e.target.value;
   }
   @action

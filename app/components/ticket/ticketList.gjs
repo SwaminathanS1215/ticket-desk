@@ -82,7 +82,7 @@ export default class TicketList extends Component {
   }
 
   get priorityOptions() {
-    return ['Low', 'Medium', 'High', 'Urgent'];
+    return ['Low', 'Medium', 'High'];
   }
 
   get urgencyOptions() {
@@ -163,6 +163,11 @@ export default class TicketList extends Component {
     );
   }
 
+  @action
+  handleSort(sortBy, order) {
+    this.args.onSort(sortBy, order);
+  }
+
   <template>
     {{! 3. 👈 Conditional logic and transitions applied in the template }}
     <div class="flex gap-2 justify-between -mr-5">
@@ -184,6 +189,7 @@ export default class TicketList extends Component {
           @isAllSelected={{this.isAllSelected}}
           @isPartialSelected={{this.isPartialSelected}}
           @onSelectAll={{this.toggleSelectAll}}
+          @onSortOrder={{this.handleSort}}
         />
         <TicketTable
           @tableHeader={{tabelHeader}}

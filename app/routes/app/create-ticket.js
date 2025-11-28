@@ -6,7 +6,7 @@ export default class AppCreateTicketRoute extends Route {
 
   model() {
     return {
-      requestor: this.session.email || '',
+      user_name: this.session.email || '',
       title: '',
       description: '',
       assign_to: '',
@@ -16,6 +16,7 @@ export default class AppCreateTicketRoute extends Route {
       status: STATUS_OPTIONS[0].value,
       priority: PRIORITY_OPTIONS[0].value,
       source: SOURCE_OPTIONS[0],
+      // attachments:[]
     };
   }
 }

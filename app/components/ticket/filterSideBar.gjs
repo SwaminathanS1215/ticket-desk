@@ -108,7 +108,7 @@ export default class FilterSidebarComponent extends Component {
     >
 
       {{! FIXED HEADER }}
-      <div class="shrink-0 sticky top-0 bg-white z-10 border-b border-gray-200 px-4 py-3">
+      {{!-- <div class="shrink-0 sticky top-0 bg-white z-10 border-b border-gray-200 px-4 py-3">
         <h2 class="text-base font-normal text-gray-900 mb-3">Filter</h2>
 
         <div class="relative">
@@ -122,7 +122,7 @@ export default class FilterSidebarComponent extends Component {
             class="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded bg-white"
           />
         </div>
-      </div>
+      </div> --}}
 
       {{! SCROLLABLE MIDDLE CONTENT }}
       <div class="flex-1 overflow-y-auto px-4 py-4 space-y-5">
@@ -199,12 +199,12 @@ export default class FilterSidebarComponent extends Component {
         /> --}}
 
         {{! Status }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.statusSearch}}
           @options={{array "Select"}}
           @onChange={{this.updateStatusSearch}}
           @label="Status"
-        />
+        /> --}}
 
         {{! Priority }}
         <CheckboxGroup
@@ -239,12 +239,12 @@ export default class FilterSidebarComponent extends Component {
         /> --}}
 
         {{! Source }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.sourceSearch}}
           @options={{array "Select"}}
           @onChange={{this.updateSourceSearch}}
           @label="Source"
-        />
+        /> --}}
 
         {{! Tags }}
         {{!-- <TagInput @label="Tags" @value={{this.tagsSearch}} @onChange={{this.updateTagsSearch}} /> --}}

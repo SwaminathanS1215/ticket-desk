@@ -1,7 +1,8 @@
 export const STATUS_OPTIONS = [
-  { label: 'Open', value: 'open' },
-  { label: 'In Progress', value: 'in_progress' },
+  { label: 'In Progress', value: 'InProgress' },
+  { label: 'open', value: 'open' },
   { label: 'Resolved', value: 'resolved' },
+  { label: 'On Hold', value: 'OnHold' },
 ];
 
 export const PRIORITY_OPTIONS = [

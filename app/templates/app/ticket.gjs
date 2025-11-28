@@ -11,6 +11,7 @@ export default class TicketTemplate extends Component {
       @prevPage={{@controller.prevPage}}
       @nextPage={{@controller.nextPage}}
       @onDelete={{@controller.deleteTicket}}
+      @onSort={{@controller.applySorting}}
     />
   </template>
 }
