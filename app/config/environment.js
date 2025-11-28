@@ -24,6 +24,6 @@ assert(
   'APP' in config && typeof config.APP === 'object'
 );
 
-config.APP.apiHost = 'http://localhost:3000';
+config.APP.apiHost = 'http://localhost:3000/auth';
 
 export default config;
