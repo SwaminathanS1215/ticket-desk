@@ -35,9 +35,9 @@ const tabelHeader = [
     render: (ticket) => ticket.description,
   },
   {
-    id: 'user_name',
+    id: 'requestor',
     title: 'Requester',
-    render: (ticket) => ticket.user_name,
+    render: (ticket) => ticket?.requestor,
   },
   {
     id: 'status',
@@ -55,9 +55,9 @@ const tabelHeader = [
     render: (ticket) => ticket.source,
   },
   {
-    id: 'assigned_to',
+    id: 'assign_to',
     title: 'Assigned To',
-    render: (ticket) => ticket.assigned_to,
+    render: (ticket) => ticket.assign_to,
   },
   {
     id: 'created_at',

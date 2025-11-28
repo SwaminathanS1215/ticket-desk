@@ -4,31 +4,34 @@ import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import isEqual from 'ticket-desk/helpers/is-equal';
+import { STATUS_OPTIONS, PRIORITY_OPTIONS, SOURCE_OPTIONS } from '../constants.js';
 
 export default class CreateTicketForm extends Component {
   @tracked form = { ...this.args.formData };
 
   @tracked errors = {
-    user_name: '',
+    requestor: '',
     title: '',
     description: '',
     status: '',
+    assign_to: '',
   };
 
   @tracked loading = false;
 
   validate() {
     let newErrors = {
-      user_name: '',
+      requestor: '',
       title: '',
       description: '',
       status: '',
+      assign_to: '',
     };
 
     let valid = true;
 
-    if (!this.form.user_name?.trim()) {
-      newErrors.user_name = 'Requestor is required';
+    if (!this.form.requestor?.trim()) {
+      newErrors.requestor = 'Requestor is required';
       valid = false;
     }
 
@@ -88,13 +91,13 @@ export default class CreateTicketForm extends Component {
           <label class="font-medium">Requestor <span class="text-red-500">*</span></label>
           <input
             type="text"
-            value={{this.form.user_name}}
-            {{on "input" (fn this.updateField "user_name")}}
-            class="w-full border px-3 py-2 rounded {{if this.errors.user_name 'border-red-500'}}"
+            value={{this.form.requestor}}
+            {{on "input" (fn this.updateField "requestor")}}
+            class="w-full border px-3 py-2 rounded {{if this.errors.requestor 'border-red-500'}}"
           />
 
-          {{#if this.errors.user_name}}
-            <p class="text-xs text-red-600 mt-1">{{this.errors.user_name}}</p>
+          {{#if this.errors.requestor}}
+            <p class="text-xs text-red-600 mt-1">{{this.errors.requestor}}</p>
           {{/if}}
         </div>
         <div>
@@ -167,6 +170,18 @@ export default class CreateTicketForm extends Component {
               <option value={{opt}} selected={{isEqual this.form.source opt}}>{{opt}}</option>
             {{/each}}
           </select>
+        </div>
+        <div>
+          <label class="font-medium">Assign To</label>
+          <input
+            type="text"
+            value={{this.form.assign_to}}
+            {{on "input" (fn this.updateField "assign_to")}}
+            class="w-full border px-3 py-2 rounded {{if this.errors.assign_to 'border-red-500'}}"
+          />
+          {{#if this.errors.assign_to}}
+            <p class="text-xs text-red-600 mt-1">{{this.errors.assign_to}}</p>
+          {{/if}}
         </div>
         <button
           type="submit"
