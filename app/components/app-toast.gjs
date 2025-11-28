@@ -20,12 +20,12 @@ export default class AppToastComponent extends Component {
   }
 
   <template>
-    <div class="fixed top-4 right-4 space-y-3 z-50">
+    <div class="fixed top-20 right-10 space-y-3 z-50">
       {{#each this.toast.messages as |msg|}}
         <div
-          class="text-white px-4 py-2 rounded shadow-lg transition-all"
+          class="px-4 py-2 rounded shadow-lg text-white transition-all {{this.getClass msg.type}}"
         >
-          {{msg.text}}
+          {{msg.message}}
         </div>
       {{/each}}
     </div>

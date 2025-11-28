@@ -30,11 +30,6 @@ const tabelHeader = [
     render: (ticket) => ticket.title,
   },
   {
-    id: 'description',
-    title: 'Description',
-    render: (ticket) => ticket.description,
-  },
-  {
     id: 'requestor',
     title: 'Requester',
     render: (ticket) => ticket?.requestor,
