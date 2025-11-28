@@ -3,7 +3,8 @@ import { service } from '@ember/service';
 
 export default class AuthService extends Service {
   @service session;
-  @service api; 
+  @service api;
+  @service router;
 
   pendingRefresh = null;
 
@@ -17,7 +18,7 @@ export default class AuthService extends Service {
       token: data.access_token,
       refreshToken: data.refresh_token,
       role: data.role,
-      email: email
+      email: email,
     });
 
     return data;
@@ -61,5 +62,10 @@ export default class AuthService extends Service {
     } finally {
       this.session.logout();
     }
+  }
+
+  async signup(payload) {
+    const res = await this.api.postJson('/auth/signup', payload);
+    return res;
   }
 }

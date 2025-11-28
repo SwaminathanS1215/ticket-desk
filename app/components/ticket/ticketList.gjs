@@ -18,9 +18,9 @@ const tabelHeader = [
     render: (ticket) => ticket.title,
   },
   {
-    id: 'user_name',
+    id: 'requestor',
     title: 'Requester',
-    render: (ticket) => ticket?.user_name,
+    render: (ticket) => ticket?.requestor,
   },
   {
     id: 'status',
@@ -33,9 +33,9 @@ const tabelHeader = [
     render: (ticket) => ticket.priority,
   },
   {
-    id: 'assigned_to',
+    id: 'assign_to',
     title: 'Assigned To',
-    render: (ticket) => ticket.assigned_to,
+    render: (ticket) => ticket.assign_to,
   },
 ];
 
@@ -45,7 +45,7 @@ export default class TicketList extends Component {
     // Or, for specific arguments:
     console.log('Modal data:', this.args.tableData);
   }
-  @tracked isFilterSidebarVisible = true;
+  @tracked isFilterSidebarVisible = false;
   get createdOptions() {
     return [
       'Last 6 months',
