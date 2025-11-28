@@ -77,7 +77,7 @@ export default class ApiService extends Service {
     return res.json();
   }
 
-  async deleteTicket(path, id) {
+  async deleteTicket(path) {
     const res = await this.request(path, {
       method: 'DELETE',
     });

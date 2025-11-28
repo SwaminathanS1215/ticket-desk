@@ -1,6 +1,6 @@
 export const STATUS_OPTIONS = [
+  { label: 'Open', value: 'open' },
   { label: 'In Progress', value: 'in_progress' },
-  { label: 'Pending', value: 'pending' },
   { label: 'Resolved', value: 'resolved' },
 ];
 
