@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import CommentSectionComponent from './commentSection.gjs';
 
 export function formatReportedDate(dateString) {
   const date = new Date(dateString);
@@ -29,11 +30,9 @@ export function formatReportedDate(dateString) {
 export default class TicketSummaryComponent extends Component {
   <template>
     <div class="flex items-start space-x-4 p-4 border-b border-gray-200">
-      {{!-- Icon box --}}
-      <div
-        class="w-12 h-12 flex items-center justify-center bg-[#10b981] rounded-md"
-      >
-        {{!-- Static icon --}}
+      {{! Icon box }}
+      <div class="w-12 h-12 flex items-center justify-center bg-[#10b981] rounded-md">
+        {{! Static icon }}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -52,7 +51,7 @@ export default class TicketSummaryComponent extends Component {
         </svg>
       </div>
 
-      {{!-- Content --}}
+      {{! Content }}
       <div class="flex flex-col">
         <h2 class="text-lg font-semibold text-gray-900">
           {{@details.title}}
@@ -66,7 +65,7 @@ export default class TicketSummaryComponent extends Component {
         </p>
       </div>
 
-      {{!-- Globe icon --}}
+      {{! Globe icon }}
       <div class="ml-auto flex items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -95,5 +94,10 @@ export default class TicketSummaryComponent extends Component {
         <p class="mt-6">{{@details.description}}</p>
       </div>
     </div>
+    <CommentSectionComponent
+      @comments={{@details.comments}}
+      @postComment={{@postComment}}
+      @deleteComment={{@deleteComment}}
+    />
   </template>
 }
