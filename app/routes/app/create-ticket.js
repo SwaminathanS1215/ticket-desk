@@ -3,8 +3,12 @@ import { STATUS_OPTIONS, PRIORITY_OPTIONS, SOURCE_OPTIONS } from '../../constant
 import { service } from '@ember/service';
 export default class AppCreateTicketRoute extends Route {
   @service session;
+  @service api;
 
-  model() {
+  async model() {
+    const usersResponse = await this.api.getJson('/api/version1/users');
+    const users = usersResponse || [];
+
     return {
       user_name: this.session.email || '',
       title: '',
@@ -17,6 +21,7 @@ export default class AppCreateTicketRoute extends Route {
       priority: PRIORITY_OPTIONS[0].value,
       source: SOURCE_OPTIONS[0],
       // attachments:[]
+      users: users,
     };
   }
 }

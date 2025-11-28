@@ -10,7 +10,7 @@ export default class AppCreateTicketController extends Controller {
   @action async createTicket(form) {
     console.log('API in controller = ', this.api);
     await this.api.postJson('/api/version1/tickets', form);
-    this.toast.success('Signup successful!');
+    this.toast.success('Ticket created successfully');
     this.router.transitionTo('app.ticket');
   }
 }

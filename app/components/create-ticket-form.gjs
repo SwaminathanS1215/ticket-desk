@@ -84,8 +84,16 @@ export default class CreateTicketForm extends Component {
 
     this.loading = true;
 
+    let payload = {
+      ...this.form,
+    };
+
+    delete payload.statusOptions;
+    delete payload.priorityOptions;
+    delete payload.sourceOptions;
+
     try {
-      await this.args.onSubmit(this.form);
+      await this.args.onSubmit(payload);
     } finally {
       this.loading = false;
     }
