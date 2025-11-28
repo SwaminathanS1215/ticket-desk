@@ -33,9 +33,11 @@ export default class TableToolbar extends Component {
   @action onSortSelect(item) {
     this.selectedSort = item;
     console.log('Selected sort:', item);
+    this.args.onSortOrder(item, this.selectedOrder);
   }
   @action onOrderSortSelect(item) {
     this.selectedOrder = item;
+    this.args.onSortOrder(this.selectedSort, item);
   }
 
   @action setupSelectAll(element) {

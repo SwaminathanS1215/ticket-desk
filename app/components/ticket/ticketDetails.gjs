@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import CommentSectionComponent from './commentSection.gjs';
+import { LinkTo } from '@ember/routing';
 
 export function formatReportedDate(dateString) {
   const date = new Date(dateString);
@@ -29,7 +30,21 @@ export function formatReportedDate(dateString) {
 
 export default class TicketSummaryComponent extends Component {
   <template>
-    <div class="flex items-start space-x-4 p-4 border-b border-gray-200">
+    <LinkTo
+      @route="app.ticket"
+      class="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 19l-7-7m0 0l7-7m-7 7h18"
+        />
+      </svg>
+      Back
+    </LinkTo>
+    <div class="flex items-start space-x-4 p-4 border-b border-gray-200 mt-12">
       {{! Icon box }}
       <div class="w-12 h-12 flex items-center justify-center bg-[#10b981] rounded-md">
         {{! Static icon }}

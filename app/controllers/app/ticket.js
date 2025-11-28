@@ -7,12 +7,32 @@ export default class AppTicketController extends Controller {
   @service api;
 
   @tracked page = 1;
-  @tracked model; // Track the model itself
+  @tracked model;
+  @tracked sortBy = 'id'; // default sort field
+  @tracked sortOrder = 'asc'; // asc or desc
+
   itemsPerPage = 10;
 
-  // Access tickets from this.model (passed from route)
+  // Main sorted ticket list
   get tickets() {
-    return this.model?.tickets || [];
+    if (!this.model?.tickets) return [];
+
+    let sorted = [...this.model.tickets];
+
+    sorted.sort((a, b) => {
+      let fieldA = a[this.sortBy];
+      let fieldB = b[this.sortBy];
+
+      // Convert strings to lowercase to avoid mismatch
+      if (typeof fieldA === 'string') fieldA = fieldA.toLowerCase();
+      if (typeof fieldB === 'string') fieldB = fieldB.toLowerCase();
+
+      if (fieldA < fieldB) return this.sortOrder === 'asc' ? -1 : 1;
+      if (fieldA > fieldB) return this.sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return sorted;
   }
 
   get totalTickets() {
@@ -25,8 +45,7 @@ export default class AppTicketController extends Controller {
 
   get paginatedTickets() {
     const start = (this.page - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    return this.tickets.slice(start, end);
+    return this.tickets.slice(start, start + this.itemsPerPage);
   }
 
   @action
@@ -47,8 +66,11 @@ export default class AppTicketController extends Controller {
   async refreshTickets() {
     try {
       const response = await this.api.getJson('/api/version1/tickets');
-      // Update the model by reassigning it completely
       this.model = { ...this.model, tickets: response };
+
+      // Re-sort after refreshing
+      this.applySorting(this.sortBy);
+
       console.log('Tickets refreshed successfully');
     } catch (error) {
       console.error('Error refreshing tickets:', error);
@@ -59,24 +81,36 @@ export default class AppTicketController extends Controller {
   @action
   async deleteTicket(ticketId) {
     try {
-      // Call DELETE API
       await this.api.deleteTicket(`/api/version1/tickets/${ticketId}`);
+      console.log('Ticket deleted:', ticketId);
 
-      console.log('Ticket deleted successfully:', ticketId);
-
-      // Refresh the tickets list to get updated data
       await this.refreshTickets();
 
-      // If deleted ticket was on the last page and it's now empty, go to previous page
       if (this.paginatedTickets.length === 0 && this.page > 1) {
         this.page--;
       }
-
-      return true;
     } catch (error) {
       console.error('Error deleting ticket:', error);
-      alert('Failed to delete ticket. Please try again.');
-      return false;
+      alert('Failed to delete ticket.');
     }
+  }
+
+  /**
+   * 🔥 Sorting Action
+   */
+  @action
+  applySorting(field, order) {
+    console.log('fieldorder', field, order);
+    // if (this.sortBy === field) {
+    //   // Toggle order if same field clicked again
+    //   this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    // } else {
+    // Reset to ascending when switching fields
+    this.sortBy = field.value;
+    this.sortOrder = order;
+    // }
+
+    // Reset to page 1 after sorting
+    this.page = 1;
   }
 }

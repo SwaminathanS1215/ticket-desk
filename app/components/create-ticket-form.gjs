@@ -5,6 +5,7 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import isEqual from 'ticket-desk/helpers/is-equal';
 import { STATUS_OPTIONS, PRIORITY_OPTIONS, SOURCE_OPTIONS } from '../constants.js';
+import FileUploader from './ui/fileUpload.gjs';
 
 export default class CreateTicketForm extends Component {
   @tracked form = { ...this.args.formData };
@@ -59,6 +60,20 @@ export default class CreateTicketForm extends Component {
     this.form[field] = event.target.value;
     this.errors = { ...this.errors, [field]: '' };
   }
+
+  // @action
+  // handleFilesChange(files) {
+  //   this.form = {
+  //     ...this.form,
+  //     attachments: files,
+  //   };
+  //   // You can perform additional operations here
+  //   console.log('Updated files:', this.form, files);
+
+  //   // Example: Extract actual File objects for upload
+  //   const fileObjects = files.map((f) => f.file);
+  //   console.log('File objects for upload:', fileObjects);
+  // }
 
   @action async submit(e) {
     e.preventDefault();
@@ -183,6 +198,8 @@ export default class CreateTicketForm extends Component {
             <p class="text-xs text-red-600 mt-1">{{this.errors.assign_to}}</p>
           {{/if}}
         </div>
+
+        {{!-- <FileUploader @onFilesChange={{this.handleFilesChange}} @files={{this.form.attachments}} /> --}}
         <button
           type="submit"
           class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded"
