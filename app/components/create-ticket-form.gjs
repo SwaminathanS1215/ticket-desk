@@ -84,8 +84,16 @@ export default class CreateTicketForm extends Component {
 
     this.loading = true;
 
+    let payload = {
+      ...this.form,
+    };
+
+    delete payload.statusOptions;
+    delete payload.priorityOptions;
+    delete payload.sourceOptions;
+
     try {
-      await this.args.onSubmit(this.form);
+      await this.args.onSubmit(payload);
     } finally {
       this.loading = false;
     }
@@ -188,12 +196,19 @@ export default class CreateTicketForm extends Component {
         </div>
         <div>
           <label class="font-medium">Assign To</label>
-          <input
-            type="text"
-            value={{this.form.assign_to}}
-            {{on "input" (fn this.updateField "assign_to")}}
-            class="w-full border px-3 py-2 rounded {{if this.errors.assign_to 'border-red-500'}}"
-          />
+          <select
+            {{on "change" (fn this.updateField "assign_to")}}
+            class="w-full border px-3 py-2 rounded"
+          >
+            <option value="">Select assignee</option>
+
+            {{#each @formData.users as |user|}}
+              <option value={{user.email}}>
+                {{user.name}}
+                ({{user.email}})
+              </option>
+            {{/each}}
+          </select>
           {{#if this.errors.assign_to}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.assign_to}}</p>
           {{/if}}
