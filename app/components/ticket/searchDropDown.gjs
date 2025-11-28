@@ -4,8 +4,8 @@ import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { hash } from '@ember/helper';
-
 import isEqual from 'ticket-desk/helpers/is-equal';
+import clickOutside from 'ticket-desk/modifiers/click-outside.js';
 
 export default class SearchDropdown extends Component {
   @tracked search = '';
@@ -37,11 +37,18 @@ export default class SearchDropdown extends Component {
   @action updateSearch(e) {
     this.search = e.target.value;
   }
+  @action
+  handleClickOutside() {
+    this.isOpen = false;
+  }
 
   <template>
-    <div class="relative inline-block w-56">
+    <div
+      class="relative inline-block w-56"
+      {{clickOutside this.handleClickOutside condition=this.isOpen}}
+    >
 
-      {{!-- Trigger --}}
+      {{! Trigger }}
       <button
         type="button"
         class="w-full border border-gray-300 bg-white rounded-md px-3 py-2 text-left text-sm hover:bg-gray-50"
@@ -51,11 +58,9 @@ export default class SearchDropdown extends Component {
       </button>
 
       {{#if this.isOpen}}
-        <div
-          class="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-10"
-        >
+        <div class="absolute mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-10">
 
-          {{!-- Search box --}}
+          {{! Search box }}
           <div class="p-2">
             <input
               type="text"
@@ -66,15 +71,14 @@ export default class SearchDropdown extends Component {
             />
           </div>
 
-          {{!-- Filtered list --}}
+          {{! Filtered list }}
           <div class="max-h-56 overflow-y-auto">
             {{#each this.filteredItems as |item|}}
               <button
                 class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 flex justify-between items-center
-                  {{if
-                    (isEqual this.args.selected.value item.value)
-                    'bg-blue-50'
-                  }}" type="button" {{on "click" (fn this.selectItem item)}}
+                  {{if (isEqual this.args.selected.value item.value) 'bg-blue-50'}}"
+                type="button"
+                {{on "click" (fn this.selectItem item)}}
               >
                 <span>{{item.label}}</span>
 
@@ -87,10 +91,12 @@ export default class SearchDropdown extends Component {
 
           <div class="border-t my-1"></div>
 
-          {{!-- ASC --}}
+          {{! ASC }}
           <button
             class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 flex justify-between
-              {{if (isEqual this.args.selectedOrder 'asc') 'bg-blue-50'}}" type="button" {{on "click" (fn this.orderSelect "asc")}}
+              {{if (isEqual this.args.selectedOrder 'asc') 'bg-blue-50'}}"
+            type="button"
+            {{on "click" (fn this.orderSelect "asc")}}
           >
             <span>Ascending</span>
             {{#if (isEqual this.args.selectedOrder "asc")}}
@@ -98,10 +104,12 @@ export default class SearchDropdown extends Component {
             {{/if}}
           </button>
 
-          {{!-- DESC --}}
+          {{! DESC }}
           <button
             class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 flex justify-between
-              {{if (isEqual this.args.selectedOrder 'desc') 'bg-blue-50'}}" type="button" {{on "click" (fn this.orderSelect "desc")}}
+              {{if (isEqual this.args.selectedOrder 'desc') 'bg-blue-50'}}"
+            type="button"
+            {{on "click" (fn this.orderSelect "desc")}}
           >
             <span>Descending</span>
 

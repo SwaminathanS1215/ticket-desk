@@ -2,8 +2,9 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { tracked } from '@glimmer/tracking';
-
 import SearchDropdown from 'ticket-desk/components/ticket/searchDropDown.gjs';
+import isEqual from 'ticket-desk/helpers/is-equal';
+import { fn } from '@ember/helper';
 
 export default class TableToolbar extends Component {
   sortFields = [
@@ -17,21 +18,8 @@ export default class TableToolbar extends Component {
   @tracked selectedSort = null;
   @tracked selectedOrder = 'asc';
 
-  // Trigger parent events
-  @action handleSelectAll(event) {
-    // this.args.onSelectAll?.(event.target.checked);
-  }
-
   @action handleSort(event) {
     // this.args.onSort?.(event.target.value);
-  }
-
-  @action prevPage() {
-    // this.args.onPrev?.();
-  }
-
-  @action nextPage() {
-    // this.args.onNext?.();
   }
 
   @action exportData() {
@@ -39,6 +27,7 @@ export default class TableToolbar extends Component {
   }
 
   @action filterAction() {
+    console.log('vnmhfhjvhjh');
     this.args.toggleFilterSidebar();
   }
   @action onSortSelect(item) {
@@ -47,6 +36,13 @@ export default class TableToolbar extends Component {
   }
   @action onOrderSortSelect(item) {
     this.selectedOrder = item;
+  }
+
+  @action setupSelectAll(element) {
+    element.indeterminate = this.args.isPartialSelected;
+  }
+  @action handleSelectAll(event) {
+    this.args.onSelectAll?.(event.target.checked);
   }
 
   <template>
@@ -59,12 +55,14 @@ export default class TableToolbar extends Component {
         <label class="flex items-center space-x-2 cursor-pointer">
           <input
             type="checkbox"
-            class="h-4 w-4 border-gray-300 rounded"
+            class="h-4 w-4 border-gray-300 rounded cursor-pointer"
+            checked={{@isAllSelected}}
             {{on "change" this.handleSelectAll}}
           />
-          <span class="text-sm text-gray-700">Select all</span>
+          <span class="text-sm text-gray-700">
+            Select all
+          </span>
         </label>
-
         <span class="text-gray-300">|</span>
 
         {{! Sort dropdown }}
@@ -85,29 +83,29 @@ export default class TableToolbar extends Component {
       <div class="flex items-center space-x-3">
         {{! Pagination info }}
         <span class="text-sm text-gray-600">
-          {{this.args.start}}
-          -
-          {{this.args.end}}
-          of
+          {{this.args.page}}/{{this.args.totalPages}}
+          total
           {{this.args.total}}
         </span>
 
         {{! Prev }}
         <button
-          class="border border-gray-200 p-2 rounded-md disabled:opacity-40"
-          disabled={{this.args.disablePrev}}
+          class="px-4 py-2 rounded-md border-2 hover:cursor-pointer border-gray-300 bg-transparent text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
           type="button"
-          {{on "click" this.prevPage}}
+          disabled={{isEqual this.args.page 1}}
+          {{on "click" @onPrev}}
         >
           ←
         </button>
 
         {{! Next }}
         <button
-          class="border border-gray-200 p-2 rounded-md disabled:opacity-40"
-          disabled={{this.args.disableNext}}
+          class="px-4 py-2 rounded-md border-2 hover:cursor-pointer border-gray-300 bg-transparent text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
           type="button"
-          {{on "click" this.nextPage}}
+          {{!-- disabled={{this.args.disableNext}} --}}
+          disabled={{isEqual this.args.page this.args.totalPages}}
+          {{! type="button" }}
+          {{on "click" @onNext}}
         >
           →
         </button>

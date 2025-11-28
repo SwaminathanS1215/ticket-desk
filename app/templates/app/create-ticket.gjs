@@ -1,3 +1,5 @@
 import CreateTicketForm from '../../components/create-ticket-form.gjs';
 
-<template><CreateTicketForm @formData={{@model}} @onSubmit={{@controller.createTicket}} /></template>
+<template>
+  <CreateTicketForm @formData={{@model}} @onSubmit={{@controller.createTicket}} />
+</template>

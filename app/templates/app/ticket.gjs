@@ -1,4 +1,16 @@
-import { pageTitle } from 'ember-page-title';
+import Component from '@glimmer/component';
 import TicketList from 'ticket-desk/components/ticket/ticketList.gjs';
 
-<template><TicketList @tableData={{@model}} /></template>
+export default class TicketTemplate extends Component {
+  <template>
+    <TicketList
+      @tableData={{@controller.paginatedTickets}}
+      @pageNumber={{@controller.page}}
+      @totalPagesNumber={{@controller.totalPages}}
+      @totalLength={{@controller.totalTickets}}
+      @prevPage={{@controller.prevPage}}
+      @nextPage={{@controller.nextPage}}
+      @onDelete={{@controller.deleteTicket}}
+    />
+  </template>
+}
