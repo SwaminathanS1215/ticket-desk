@@ -128,75 +128,75 @@ export default class FilterSidebarComponent extends Component {
       <div class="flex-1 overflow-y-auto px-4 py-4 space-y-5">
 
         {{! Created }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.createdPeriod}}
           @options={{@createdOptions}}
           @onChange={{this.updateCreatedPeriod}}
           @label="Created"
-        />
+        /> --}}
 
         {{! Agents }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.agentSearch}}
           @options={{array "Select"}}
           @onChange={{this.updateAgentSearch}}
           @label="Agents"
-        />
+        /> --}}
 
         {{! Requesters }}
-        <TagInput
+        {{!-- <TagInput
           @label="Requesters"
           @value={{this.requesterSearch}}
           @onChange={{this.updateRequesterSearch}}
-        />
+        /> --}}
 
         {{! Departments }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.departmentSearch}}
           @options={{array "Select"}}
           @onChange={{this.updateDepartmentSearch}}
           @label="Departments"
-        />
+        /> --}}
 
         {{! Groups }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.groupSearch}}
           @options={{array "Select"}}
           @onChange={{this.updateGroupSearch}}
           @label="Groups"
-        />
+        /> --}}
 
         {{! Planned Start Date }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.plannedStartDate}}
           @options={{array "Select a time period"}}
           @onChange={{this.updatePlannedStartDate}}
           @label="Planned Start Date"
-        />
+        /> --}}
 
         {{! Planned End Date }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.plannedEndDate}}
           @options={{array "Select a time period"}}
           @onChange={{this.updatePlannedEndDate}}
           @label="Planned End Date"
-        />
+        /> --}}
 
         {{! Due By }}
-        <CheckboxGroup
+        {{!-- <CheckboxGroup
           @options={{array "Overdue" "Tomorrow" "Next 8 Hours"}}
           @selected={{this.selectedDueBy}}
           @onChange={{fn this.updateCheckboxGroup "selectedDueBy"}}
           @label="Due By"
-        />
+        /> --}}
 
         {{! First Response }}
-        <CheckboxGroup
+        {{!-- <CheckboxGroup
           @options={{array "Overdue" "Due Today"}}
           @selected={{this.selectedFirstResponse}}
           @onChange={{fn this.updateCheckboxGroup "selectedFirstResponse"}}
           @label="Response"
-        />
+        /> --}}
 
         {{! Status }}
         <CustomSelect
@@ -215,28 +215,28 @@ export default class FilterSidebarComponent extends Component {
         />
 
         {{! Urgency }}
-        <CheckboxGroup
+        {{!-- <CheckboxGroup
           @options={{@urgencyOptions}}
           @selected={{this.selectedUrgency}}
           @onChange={{fn this.updateCheckboxGroup "selectedUrgency"}}
           @label="Urgency"
-        />
+        /> --}}
 
         {{! Impact }}
-        <CheckboxGroup
+        {{!-- <CheckboxGroup
           @options={{@impactOptions}}
           @selected={{this.selectedImpact}}
           @onChange={{fn this.updateCheckboxGroup "selectedImpact"}}
           @label="Impact"
-        />
+        /> --}}
 
         {{! Type }}
-        <CheckboxGroup
+        {{!-- <CheckboxGroup
           @options={{@typeOptions}}
           @selected={{this.selectedType}}
           @onChange={{fn this.updateCheckboxGroup "selectedType"}}
           @label="Type"
-        />
+        /> --}}
 
         {{! Source }}
         <CustomSelect
@@ -247,15 +247,15 @@ export default class FilterSidebarComponent extends Component {
         />
 
         {{! Tags }}
-        <TagInput @label="Tags" @value={{this.tagsSearch}} @onChange={{this.updateTagsSearch}} />
+        {{!-- <TagInput @label="Tags" @value={{this.tagsSearch}} @onChange={{this.updateTagsSearch}} /> --}}
 
         {{! Category }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.selectedCategory}}
           @options={{array "Select"}}
           @onChange={{this.updateCategory}}
           @label="Category"
-        />
+        /> --}}
 
       </div>
 
