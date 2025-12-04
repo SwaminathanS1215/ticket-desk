@@ -170,7 +170,7 @@ export default class TicketList extends Component {
 
   <template>
     {{! 3. 👈 Conditional logic and transitions applied in the template }}
-    <div class="flex gap-2 justify-between -mr-5">
+    <div class="flex gap-2 justify-between -mr-5 w-full h-full">
       {{! Table Width: Adjusts dynamically based on sidebar visibility }}
       <div
         class={{if
@@ -205,7 +205,7 @@ export default class TicketList extends Component {
       <div
         class={{if
           this.isFilterSidebarVisible
-          "w-2/6 transition-all duration-300"
+          "w-2/6 transition-all duration-300 -mt-4"
           "w-0 overflow-hidden transition-all duration-300"
         }}
       >

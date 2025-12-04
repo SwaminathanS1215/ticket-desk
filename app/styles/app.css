@@ -2,3 +2,14 @@
 @import url("dashboard.css");
 
 
+
+@theme {
+  --color-global-blue: #12344D;
+  --color-gray-1000:#27313b;
+  --color-gray-1001:#c9d3db;
+  --color-gray-1002:#345C7C;
+  --color-gray-1003:#eceff1;
+
+}
+
+

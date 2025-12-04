@@ -5,7 +5,7 @@ export default class Checkbox extends Component {
   <template>
     <input
       type="checkbox"
-      class="h-4 w-4 border-gray-300 rounded cursor-pointer"
+      class="h-3 w-3 border-gray-300 rounded cursor-pointer"
       checked={{@checked}}
       {{on "change" @onChange}}
       ...attributes

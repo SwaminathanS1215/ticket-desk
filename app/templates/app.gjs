@@ -12,24 +12,24 @@ export default class AppTemplate extends Component {
 
   get mainStyle() {
     return `
-      margin-left: ${this.sidebarWidth};
+      margin-left: 16px;
       height: calc(100vh - 64px);
-      width: calc(100vw - ${this.sidebarWidth});
-      margin-top: 64px;
+      flex:1;
+    padding-top:80px
     `;
   }
 
   <template>
-    <div class="min-h-screen w-full bg-gray-100 overflow-hidden flex">
+    <div class="min-h-screen w-full bg-white flex">
 
       <LayoutSidebar />
 
-      <div class="flex-1 flex flex-col overflow-hidden">
+      <div class="flex-1 flex flex-col">
 
         <LayoutHeader />
 
         <main
-          class="p-6 overflow-y-auto transition-all duration-300 ease-in-out"
+          class="overflow-y-auto transition-all duration-300 ease-in-out bg-white"
           style={{this.mainStyle}}
         >
           {{outlet}}
