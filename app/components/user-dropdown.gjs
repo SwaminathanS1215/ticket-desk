@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { service } from '@ember/service';
+import clickOutside from 'ticket-desk/modifiers/click-outside.js';
 
 export default class UserDropdown extends Component {
   @service router;
@@ -47,11 +48,12 @@ export default class UserDropdown extends Component {
 
       {{#if this.isOpen}}
         <div
-          class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg py-2 border z-50"
+          class="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 border border-gray-200 z-50"
+          {{clickOutside this.toggleMenu condition=this.isOpen}}
         >
 
           <button
-            class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
             type="button"
             {{on "click" this.closeMenu}}
           >
@@ -59,17 +61,17 @@ export default class UserDropdown extends Component {
           </button>
 
           <button
-            class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
             type="button"
             {{on "click" this.closeMenu}}
           >
             Settings
           </button>
 
-          <hr class="my-1" />
+          <hr class="my-1 border-gray-200" />
 
           <button
-            class="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+            class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition-colors duration-150"
             type="button"
             {{on "click" this.logout}}
           >

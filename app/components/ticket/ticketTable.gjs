@@ -56,9 +56,9 @@ export default class TicketTable extends Component {
   }
 
   <template>
-    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm bg-white">
+    <div class="overflow-x-auto rounded-xs border border-gray-200 shadow-sm bg-white">
       <table class="min-w-full text-left border-collapse">
-        <thead class="bg-gray-100 border-b border-gray-200">
+        <thead class="bg-gray-100 border-b border-gray-1003">
           <tr>
             {{#each this.headers as |col|}}
               <th class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap">

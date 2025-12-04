@@ -13,22 +13,15 @@ export default class LayoutHeader extends Component {
 
   MenuIcon = MenuIcon;
 
-  @action toggleSidebar() {
-    this.sidebar.toggle();
-  }
-
   <template>
     <header
-      class="fixed top-0 left-0 right-0 h-16 bg-indigo-700 text-white flex items-center justify-between px-6 shadow z-40 pl-3"
+      class="fixed top-0 left-0 right-0 h-16 bg-white text-gray-1000 border-b border-gray-1001 flex items-center justify-between px-6 shadow z-40 pl-3 transition-all duration-300 ease-in-out"
+      style={{this.sidebar.headerStyle}}
     >
       <div class="flex items-center gap-4">
-        <button
-          type="button"
-          class="p-2 rounded hover:bg-indigo-600 transition"
-          {{on "click" this.toggleSidebar}}
-        >
+        {{!-- <button type="button" class="p-2 rounded hover:bg-indigo-600 transition">
           {{this.MenuIcon}}
-        </button>
+        </button> --}}
         <h1 class="text-xl font-bold">Ticket Desk</h1>
       </div>
       <div class="flex items-center gap-4">
