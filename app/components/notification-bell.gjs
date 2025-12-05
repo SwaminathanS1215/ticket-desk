@@ -8,13 +8,7 @@ export default class NotificationBell extends Component {
   @tracked isOpen = false;
 
   get notifications() {
-    return (
-      this.args.items ?? [
-        { id: 1, message: 'New ticket assigned', time: '2m ago' },
-        { id: 2, message: 'Server restart scheduled', time: '1h ago' },
-        { id: 3, message: 'New comment on ticket', time: '2h ago' },
-      ]
-    );
+    return this.args.items ?? [];
   }
 
   @action toggleMenu(e) {
@@ -26,8 +20,17 @@ export default class NotificationBell extends Component {
     this.isOpen = false;
   }
 
+  @action
+  handleClickOutside() {
+    this.isOpen = false;
+  }
+
   <template>
-    <div class="relative" {{on "click" this.toggleMenu}}>
+    <div
+      class="relative"
+      {{on "click" this.toggleMenu}}
+      {{clickOutside this.handleClickOutside condition=this.isOpen}}
+    >
 
       <button class="relative p-2 rounded-full hover:bg-indigo-600/30 transition" type="button">
         <svg
@@ -66,7 +69,7 @@ export default class NotificationBell extends Component {
           </div>
 
           <!-- Mobile App Banner -->
-          <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          {{!-- <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
                 <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -100,10 +103,10 @@ export default class NotificationBell extends Component {
                 </button>
               </div>
             </div>
-          </div>
+          </div> --}}
 
           <!-- Filter Tabs -->
-          <div class="flex gap-2 px-6 py-3 border-b border-gray-200 bg-white">
+          {{!-- <div class="flex gap-2 px-6 py-3 border-b border-gray-200 bg-white">
             <button
               type="button"
               class="px-4 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
@@ -122,7 +125,7 @@ export default class NotificationBell extends Component {
             >
               Discussions
             </button>
-          </div>
+          </div> --}}
 
           <!-- Notifications List -->
           <ul class="max-h-96 overflow-y-auto divide-y divide-gray-200">

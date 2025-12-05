@@ -31,7 +31,7 @@ const tabelHeader = [
   },
   {
     id: 'requestor',
-    title: 'Requester',
+    title: 'Requestor',
     render: (ticket) => ticket?.requestor,
   },
   {
@@ -74,7 +74,7 @@ export default class TicketList extends Component {
     // Or, for specific arguments:
     console.log('Modal data:', this.args.prevPage);
   }
-  @tracked isFilterSidebarVisible = true;
+  @tracked isFilterSidebarVisible = false;
   @tracked selectedTickets = new Set();
 
   get createdOptions() {

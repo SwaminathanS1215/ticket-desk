@@ -73,7 +73,7 @@ export default class TicketSummaryComponent extends Component {
         </h2>
 
         <p class="text-sm text-gray-700">
-          <span class="font-medium">{{@details.user_name}}</span>
+          <span class="font-medium">{{@details.requestor}}</span>
           <span class="text-gray-500 ml-1">
             {{formatReportedDate @details.created_at}}
           </span>
@@ -81,7 +81,7 @@ export default class TicketSummaryComponent extends Component {
       </div>
 
       {{! Globe icon }}
-      <div class="ml-auto flex items-center">
+      {{!-- <div class="ml-auto flex items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -98,7 +98,7 @@ export default class TicketSummaryComponent extends Component {
            9m0-18c-2.5 0-4.5 4.03-4.5 9s2 9 4.5 9m-7.5-9h15"
           />
         </svg>
-      </div>
+      </div> --}}
 
     </div>
     <div class="mt-12">

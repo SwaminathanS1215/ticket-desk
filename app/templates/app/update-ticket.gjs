@@ -1,4 +1,10 @@
 import CreateTicketForm from '../../components/create-ticket-form.gjs';
 <template>
-  <CreateTicketForm @formData={{@model}} @onSubmit={{@controller.updateTicket}} @isEdit={{true}} />
+  <div class="max-w-4xl">
+    <CreateTicketForm
+      @formData={{@model}}
+      @onSubmit={{@controller.updateTicket}}
+      @isEdit={{true}}
+    />
+  </div>
 </template>

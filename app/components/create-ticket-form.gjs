@@ -84,15 +84,36 @@ export default class CreateTicketForm extends Component {
 
     this.loading = true;
 
+    let payload = {
+      ...this.form,
+    };
+
+    delete payload.statusOptions;
+    delete payload.priorityOptions;
+    delete payload.sourceOptions;
+    delete payload.users;
+
     try {
-      await this.args.onSubmit(this.form);
+      await this.args.onSubmit(payload);
     } finally {
       this.loading = false;
     }
   }
 
+  @action goBack() {
+    history.back();
+  }
+
   <template>
     <div class="relative w-full p-6 bg-white">
+      <h1 class="text-2xl font-semibold mb-6 text-gray-800">
+        {{#if @isEdit}}
+          Update Ticket
+        {{else}}
+          New Ticket
+        {{/if}}
+      </h1>
+
       <form {{on "submit" this.submit}} class="space-y-5">
         <div>
           <div class="flex items-center justify-between mb-2">
@@ -100,13 +121,13 @@ export default class CreateTicketForm extends Component {
               Requester
               <span class="text-red-500">*</span>
             </label>
-            <button
+            {{!-- <button
               type="button"
               class="text-sm text-teal-600 hover:text-teal-700 flex items-center gap-1"
             >
               <span class="text-lg">⊕</span>
               Add new requester
-            </button>
+            </button> --}}
           </div>
           <input
             type="text"
@@ -119,9 +140,9 @@ export default class CreateTicketForm extends Component {
           {{#if this.errors.requestor}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.requestor}}</p>
           {{/if}}
-          <div class="mt-1 text-right">
+          {{!-- <div class="mt-1 text-right">
             <button type="button" class="text-sm text-blue-600 hover:text-blue-700">Add Cc</button>
-          </div>
+          </div> --}}
         </div>
 
         <div>
@@ -196,20 +217,33 @@ export default class CreateTicketForm extends Component {
             {{/each}}
           </select>
         </div>
-
         <div>
-          <label class="block text-sm font-normal text-gray-700 mb-2">Impact</label>
+          <label class="font-medium">Source</label>
+          <select
+            value={{this.form.source}}
+            {{on "input" (fn this.updateField "source")}}
+            class="w-full border px-3 py-2 rounded capitalize"
+          >
+            {{#each @formData.sourceOptions as |opt|}}
+              <option value={{opt}} selected={{isEqual this.form.source opt}}>{{opt}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div>
+          <label class="font-medium">Assign To</label>
           <select
             value={{this.form.assign_to}}
             {{on "change" (fn this.updateField "assign_to")}}
-            class="w-full border border-gray-300 px-3 py-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none
-              {{if this.errors.assign_to 'border-red-500'}}"
-            style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
+            class="w-full border px-3 py-2 rounded"
           >
-            <option value="">Select impact</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
+            <option value="">Select assignee</option>
+
+            {{#each @formData.users as |user|}}
+              <option value={{user.email}} selected={{isEqual this.form.assign_to user.email}}>
+                {{user.name}}
+                ({{user.email}})
+              </option>
+            {{/each}}
           </select>
           {{#if this.errors.assign_to}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.assign_to}}</p>
@@ -235,17 +269,20 @@ export default class CreateTicketForm extends Component {
           <button
             type="button"
             class="px-6 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 font-medium"
+            {{on "click"this.goBack}}
           >
             Cancel
           </button>
+
           <button
             type="submit"
             class="px-6 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded font-medium flex items-center gap-2"
           >
-            {{if this.loading "Submitting..." "Submit"}}
-            {{#unless this.loading}}
-              <span>▲</span>
-            {{/unless}}
+            {{#if @isEdit}}
+              {{if this.loading "Updating..." "Update Ticket"}}
+            {{else}}
+              {{if this.loading "Creating..." "Create Ticket"}}
+            {{/if}}
           </button>
         </div>
       </form>
