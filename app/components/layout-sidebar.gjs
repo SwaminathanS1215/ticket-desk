@@ -3,7 +3,7 @@ import { service } from '@ember/service';
 import { LinkTo } from '@ember/routing';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
-import { HomeIcon, TicketIcon, ChevronIcon } from '../utils/icons';
+import { HomeIcon, TicketIcon, ChevronIcon, AtomIcon, ArrowIcon } from '../utils/icons';
 import { tracked } from '@glimmer/tracking';
 import eq from 'ticket-desk/helpers/is-equal';
 import { fn } from '@ember/helper';
@@ -33,21 +33,15 @@ export default class LayoutSidebar extends Component {
     >
 
       <aside
-        class="fixed top-0 left-0 bottom-0 bg-global-blue w-full text-indigo-100 border-r border-indigo-800 shadow-xl transition-all duration-300 ease-in-out"
+        class="fixed top-0 left-0 bottom-0 bg-global-blue w-full text-indigo-100 border-r border-indigo-800 shadow-xl transition-all duration-300 ease-in-out z-50"
         style={{this.sidebar.sidebarStyle}}
       >
 
-        <div class="flex items-center justify-start gap-5 px-6 py-6 mt-6 mb-8">
-          {{this.AtomIcon}}
-
-          {{#unless this.sidebar.collapsed}}
-            <p class="font-medium">Ticket Desk</p>
-          {{/unless}}
-
+        <div class="flex items-center justify-start gap-5 mt-6">
         </div>
 
         <button
-          class="absolute top-20 bg-white rounded-full cursor-pointer p-1.5 transition-all duration-200 group hover:bg-indigo-700 shadow-lg
+          class="absolute top-13 bg-white rounded-full cursor-pointer p-1.5 transition-all duration-200 group hover:bg-indigo-700 shadow-lg
             {{if this.sidebar.collapsed 'left-14' '-right-2'}}"
           {{on "click" this.toggleSidebar}}
         >
@@ -81,14 +75,15 @@ export default class LayoutSidebar extends Component {
           </span>
         </button>
 
-        <nav class="mt-4">
+        <nav class="mt-14">
           <ul class="space-y-2 px-2">
 
             <li>
               <LinkTo
                 @route="app.dashboard"
                 @activeClass="bg-white text-gray-1002"
-                class="flex items-center gap-4 px-5 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white"
+                class="flex items-center gap-4 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white {{if this.sidebar.collapsed 'justify-center px-0 w-[40px] m-auto' 'px-5 w-full'}}"
+                {{on "click" (fn this.setActive "dashboard")}}
               >
                 {{this.HomeIcon}}
                 {{#unless this.sidebar.collapsed}}
@@ -101,7 +96,8 @@ export default class LayoutSidebar extends Component {
               <LinkTo
                 @route="app.ticket"
                 @activeClass="bg-white text-gray-1002"
-                class="flex items-center gap-4 px-5 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white"
+                class="flex items-center gap-4 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white {{if this.sidebar.collapsed 'justify-center px-0 w-[40px] m-auto' 'px-5 w-full'}}"
+                {{on "click" (fn this.setActive "tickets")}}
               >
                 {{this.TicketIcon}}
                 {{#unless this.sidebar.collapsed}}

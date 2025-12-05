@@ -69,7 +69,7 @@ export default class NotificationBell extends Component {
           </div>
 
           <!-- Mobile App Banner -->
-          <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          {{!-- <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
                 <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -103,10 +103,10 @@ export default class NotificationBell extends Component {
                 </button>
               </div>
             </div>
-          </div>
+          </div> --}}
 
           <!-- Filter Tabs -->
-          <div class="flex gap-2 px-6 py-3 border-b border-gray-200 bg-white">
+          {{!-- <div class="flex gap-2 px-6 py-3 border-b border-gray-200 bg-white">
             <button
               type="button"
               class="px-4 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
@@ -125,7 +125,7 @@ export default class NotificationBell extends Component {
             >
               Discussions
             </button>
-          </div>
+          </div> --}}
 
           <!-- Notifications List -->
           <ul class="max-h-96 overflow-y-auto divide-y divide-gray-200">

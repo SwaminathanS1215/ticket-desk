@@ -10,7 +10,7 @@ export default class AppCreateTicketRoute extends Route {
     const users = usersResponse || [];
 
     return {
-      user_name: this.session.email || '',
+      requestor: this.session.email || '',
       title: '',
       description: '',
       assign_to: null,

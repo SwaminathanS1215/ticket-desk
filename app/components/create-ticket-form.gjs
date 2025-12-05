@@ -121,13 +121,13 @@ export default class CreateTicketForm extends Component {
               Requester
               <span class="text-red-500">*</span>
             </label>
-            <button
+            {{!-- <button
               type="button"
               class="text-sm text-teal-600 hover:text-teal-700 flex items-center gap-1"
             >
               <span class="text-lg">⊕</span>
               Add new requester
-            </button>
+            </button> --}}
           </div>
           <input
             type="text"
@@ -140,9 +140,9 @@ export default class CreateTicketForm extends Component {
           {{#if this.errors.requestor}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.requestor}}</p>
           {{/if}}
-          <div class="mt-1 text-right">
+          {{!-- <div class="mt-1 text-right">
             <button type="button" class="text-sm text-blue-600 hover:text-blue-700">Add Cc</button>
-          </div>
+          </div> --}}
         </div>
 
         <div>
