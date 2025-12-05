@@ -3,10 +3,15 @@ import { service } from '@ember/service';
 import { LinkTo } from '@ember/routing';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
-import { HomeIcon, TicketIcon, ChevronIcon, ArrowIcon, AtomIcon } from '../utils/icons';
+import { HomeIcon, TicketIcon, ChevronIcon } from '../utils/icons';
+import { tracked } from '@glimmer/tracking';
+import eq from 'ticket-desk/helpers/is-equal';
+import { fn } from '@ember/helper';
 
 export default class LayoutSidebar extends Component {
   @service sidebar;
+
+  @tracked active = 'dashboard';
 
   HomeIcon = HomeIcon;
   TicketIcon = TicketIcon;
@@ -15,6 +20,10 @@ export default class LayoutSidebar extends Component {
 
   @action toggleSidebar() {
     this.sidebar.toggle();
+  }
+
+  @action setActive(route) {
+    this.active = route;
   }
 
   <template>

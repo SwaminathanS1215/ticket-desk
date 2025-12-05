@@ -5,6 +5,7 @@ import { tracked } from '@glimmer/tracking';
 import { on } from '@ember/modifier';
 import { modifier } from 'ember-modifier';
 import { CreateIcon, TicketLargeIcon } from '../utils/icons';
+import clickOutside from 'ticket-desk/modifiers/click-outside.js';
 
 export default class CreateMenu extends Component {
   @service createMenu;
@@ -34,9 +35,13 @@ export default class CreateMenu extends Component {
   applyRotation = modifier((element) => {
     element.style.transform = `rotate(${this.rotationDegrees}deg)`;
   });
+  @action
+  handleClickOutside() {
+    this.createMenu.close();
+  }
 
   <template>
-    <div class="relative">
+    <div class="relative" {{clickOutside this.handleClickOutside condition=this.createMenu.open}}>
       <button
         type="button"
         class="w-7 h-7 shadow-lg flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 shadow text-white cursor-pointer transition"

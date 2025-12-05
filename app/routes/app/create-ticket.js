@@ -13,7 +13,7 @@ export default class AppCreateTicketRoute extends Route {
       user_name: this.session.email || '',
       title: '',
       description: '',
-      assign_to: '',
+      assign_to: null,
       statusOptions: STATUS_OPTIONS,
       priorityOptions: PRIORITY_OPTIONS,
       sourceOptions: SOURCE_OPTIONS,

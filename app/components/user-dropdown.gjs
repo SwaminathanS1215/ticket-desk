@@ -13,7 +13,7 @@ export default class UserDropdown extends Component {
   @tracked isOpen = false;
 
   get userName() {
-    return this.session.user?.email || this.args.user || 'User';
+    return this.session?.email || this.args.user || 'User';
   }
 
   @action toggleMenu(e) {
@@ -31,8 +31,17 @@ export default class UserDropdown extends Component {
     this.router.transitionTo('/');
   }
 
+  @action
+  handleClickOutside() {
+    this.isOpen = false;
+  }
+
   <template>
-    <div class="relative" {{on "click" this.toggleMenu}}>
+    <div
+      class="relative"
+      {{on "click" this.toggleMenu}}
+      {{clickOutside this.handleClickOutside condition=this.isOpen}}
+    >
 
       <button class="flex items-center gap-2 focus:outline-none" type="button">
         <img

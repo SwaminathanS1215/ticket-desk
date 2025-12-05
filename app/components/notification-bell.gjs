@@ -8,13 +8,7 @@ export default class NotificationBell extends Component {
   @tracked isOpen = false;
 
   get notifications() {
-    return (
-      this.args.items ?? [
-        { id: 1, message: 'New ticket assigned', time: '2m ago' },
-        { id: 2, message: 'Server restart scheduled', time: '1h ago' },
-        { id: 3, message: 'New comment on ticket', time: '2h ago' },
-      ]
-    );
+    return this.args.items ?? [];
   }
 
   @action toggleMenu(e) {
@@ -26,8 +20,17 @@ export default class NotificationBell extends Component {
     this.isOpen = false;
   }
 
+  @action
+  handleClickOutside() {
+    this.isOpen = false;
+  }
+
   <template>
-    <div class="relative" {{on "click" this.toggleMenu}}>
+    <div
+      class="relative"
+      {{on "click" this.toggleMenu}}
+      {{clickOutside this.handleClickOutside condition=this.isOpen}}
+    >
 
       <button class="relative p-2 rounded-full hover:bg-indigo-600/30 transition" type="button">
         <svg

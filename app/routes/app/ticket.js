@@ -10,7 +10,7 @@ export default class TicketRoute extends Route {
       const response = await this.api.getJson('/api/version1/tickets');
 
       return {
-        tickets: response,
+        tickets: response?.tickets || [],
       };
     } catch (error) {
       console.error('Error fetching tickets:', error);
