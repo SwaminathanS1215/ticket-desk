@@ -241,7 +241,7 @@ export default class FileUploaderComponent extends Component {
 
           <!-- Hover Preview Card -->
           <div
-            class="absolute bottom-full right-0 mb-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity z-50"
+            class="absolute bottom-full right-0 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity z-50"
           >
             <div class="bg-white border-2 border-gray-300 rounded-lg shadow-lg p-3 w-64">
               <div class="flex items-start gap-3">

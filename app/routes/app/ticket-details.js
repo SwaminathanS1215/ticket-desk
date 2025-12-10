@@ -9,11 +9,11 @@ export default class TicketDetailsRoute extends Route {
 
     // Run all three API calls together
     let [ticketRes, commentsRes, attachmentRes] = await Promise.allSettled([
-      this.api.getJson(`/api/version1/tickets/${id}`),
-      this.api.getJson(`/api/version1/tickets/${id}/comments`),
-      this.api.getJson(`/api/version1/tickets/${id}/attachment`),
+      this.api.getJson(`api/version1/tickets/${id}`),
+      this.api.getJson(`api/version1/tickets/${id}/comments`),
+      this.api.getJson(`api/version1/tickets/${id}/attachment`),
     ]);
-
+    // 'http://localhost:3000/api/version1/tickets/cdc6803d/attachment
     // Extract ticket
     let ticket = ticketRes.status === 'fulfilled' ? ticketRes.value.ticket : {};
 
