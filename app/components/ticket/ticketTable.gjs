@@ -100,7 +100,7 @@ export default class TicketTable extends Component {
                         <LinkTo
                           @route="app.ticket_details"
                           @model={{ticket.ticket_id}}
-                          class="text-blue-600 underline"
+                          class="text-blue-600 underline truncate block max-w-[150px]"
                         >
                           {{col.render ticket}}
                         </LinkTo>
