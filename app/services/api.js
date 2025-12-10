@@ -23,7 +23,10 @@ export default class ApiService extends Service {
     const token = this.session.token;
 
     const headers = new Headers(options.headers || {});
-    headers.set('Content-Type', headers.get('Content-Type') || 'application/json');
+
+    if (!(options.body instanceof FormData)) {
+      headers.set('Content-Type', headers.get('Content-Type') || 'application/json');
+    }
 
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
@@ -57,6 +60,18 @@ export default class ApiService extends Service {
     const res = await this.request(path, {
       method: 'POST',
       body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data?.error || `Request failed: ${res.status}`);
+    }
+    return res.json();
+  }
+  // POST FILE
+  async postFile(path, body) {
+    const res = await this.request(path, {
+      method: 'POST',
+      body: body,
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));

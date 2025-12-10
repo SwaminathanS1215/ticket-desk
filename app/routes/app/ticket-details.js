@@ -4,17 +4,32 @@ import { action } from '@ember/object';
 
 export default class TicketDetailsRoute extends Route {
   @service api;
-
   async model(params) {
     let { id } = params;
-    const response = await this.api.getJson(`/api/version1/tickets/${id}`);
-    const comments = await this.api.getJson(`/api/version1/tickets/${id}/comments`);
 
-    console.log('response', comments);
+    // Run all three API calls together
+    let [ticketRes, commentsRes, attachmentRes] = await Promise.allSettled([
+      this.api.getJson(`/api/version1/tickets/${id}`),
+      this.api.getJson(`/api/version1/tickets/${id}/comments`),
+      this.api.getJson(`/api/version1/tickets/${id}/attachment`),
+    ]);
 
+    // Extract ticket
+    let ticket = ticketRes.status === 'fulfilled' ? ticketRes.value.ticket : {};
+
+    console.log('commentscomments', commentsRes);
+
+    // Extract comments
+    let comments = commentsRes.status === 'fulfilled' ? commentsRes.value.comments : [];
+
+    // Extract attachment (FAILED? → return empty string)
+    let attachment = attachmentRes.status === 'fulfilled' ? attachmentRes.value : '';
+
+    // Return final model object
     return {
-      ...response.ticket,
-      comments: [...comments.comments],
+      ...ticket,
+      comments,
+      attachment,
     };
   }
 

@@ -9,7 +9,7 @@ import { fn } from '@ember/helper';
 export default class TableToolbar extends Component {
   sortFields = [
     { value: 'subject', label: 'Subject' },
-    { value: 'requester', label: 'Requester' },
+    { value: 'requestor', label: 'Requestor' },
     { value: 'status', label: 'Status' },
     { value: 'priority', label: 'Priority' },
     { value: 'department', label: 'Department' },
@@ -105,7 +105,7 @@ export default class TableToolbar extends Component {
           class="px-4 py-2 rounded-md border-2 hover:cursor-pointer border-gray-300 bg-transparent text-gray-700 font-medium transition-all duration-200 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
           type="button"
           {{!-- disabled={{this.args.disableNext}} --}}
-          disabled={{isEqual this.args.page this.args.totalPages}}
+          disabled={{isEqual this.args.nextPageEnabled null}}
           {{! type="button" }}
           {{on "click" @onNext}}
         >

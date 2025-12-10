@@ -6,6 +6,7 @@ import { on } from '@ember/modifier';
 import isEqual from 'ticket-desk/helpers/is-equal';
 import { fn } from '@ember/helper';
 import { service } from '@ember/service';
+import FileUploader from '../ui/fileUpload.gjs';
 
 // Format ISO date: 2025-11-27T13:15:30.328Z → 27/11/2025
 function formatDate(dateString) {
@@ -44,6 +45,18 @@ function getRandomColor(name = 'a') {
   return colors[Math.abs(hash) % colors.length];
 }
 
+function formatFileSize(bytes) {
+  if (!bytes) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+}
+
+function isImageFile(contentType) {
+  return contentType && contentType.startsWith('image/');
+}
+
 export default class CommentSectionComponent extends Component {
   @service session;
   @tracked newComment = '';
@@ -64,6 +77,14 @@ export default class CommentSectionComponent extends Component {
 
   get isAddButtonDisabled() {
     return this.isSubmitting || !this.newComment.trim();
+  }
+
+  get existedFile() {
+    return this.args.existedFile;
+  }
+
+  get isImage() {
+    return this.existedFile && isImageFile(this.existedFile.content_type);
   }
 
   @action
@@ -99,6 +120,13 @@ export default class CommentSectionComponent extends Component {
     // If parent updates @comments, no need to mutate this.comments
   }
 
+  @action
+  removeAttachment() {
+    if (this.args.onRemoveExistedFile) {
+      this.args.onRemoveExistedFile();
+    }
+  }
+
   // Template
   <template>
     <div class="mx-auto mt-6 p-6 bg-white rounded-lg shadow-lg">
@@ -132,8 +160,135 @@ export default class CommentSectionComponent extends Component {
           >
             {{if this.isSubmitting "Adding..." "Add Comment"}}
           </button>
+
+          <FileUploader
+            @existedFile={{@existedFile}}
+            @uploadFile={{@uploadFile}}
+            @onRemoveExistedFile={{this.removeAttachment}}
+            @onFileChange={{this.handleFileChange}}
+            @disabled={{this.isSubmitting}}
+          />
         </div>
       </div>
+
+      {{! File Preview Section }}
+      {{#if this.existedFile}}
+        <div
+          class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200"
+        >
+          <div class="flex items-start gap-4">
+
+            {{! Preview Area }}
+            <div class="flex-shrink-0">
+              {{#if this.isImage}}
+                {{! Image Preview }}
+                <div class="w-32 h-32 rounded-lg overflow-hidden shadow-md border-2 border-white">
+                  <img
+                    src={{this.existedFile.url}}
+                    alt={{this.existedFile.filename}}
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+              {{else}}
+                {{! PDF/File Icon }}
+                <div
+                  class="w-32 h-32 rounded-lg bg-white shadow-md border-2 border-gray-200 flex flex-col items-center justify-center"
+                >
+                  <svg class="w-16 h-16 text-red-500 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="text-xs font-semibold text-gray-600 uppercase">
+                    {{#if (isEqual this.existedFile.content_type "application/pdf")}}
+                      PDF
+                    {{else}}
+                      File
+                    {{/if}}
+                  </span>
+                </div>
+              {{/if}}
+            </div>
+
+            {{! File Info }}
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between">
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-gray-800 truncate mb-1">
+                    {{this.existedFile.filename}}
+                  </h3>
+                  <div class="flex flex-wrap gap-3 text-sm text-gray-600">
+                    <span class="flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                        />
+                      </svg>
+                      {{formatFileSize this.existedFile.byte_size}}
+                    </span>
+                    <span class="flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      {{formatDate this.existedFile.created_at}}
+                    </span>
+                  </div>
+
+                  {{! View/Download Link }}
+                  <a
+                    href={{this.existedFile.url}}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1 mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium hover:underline"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                    {{#if this.isImage}}
+                      View Image
+                    {{else}}
+                      Open File
+                    {{/if}}
+                  </a>
+                </div>
+
+                {{! Remove Button }}
+                <button
+                  type="button"
+                  {{on "click" this.removeAttachment}}
+                  class="flex-shrink-0 ml-4 p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
+                  title="Remove attachment"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {{/if}}
 
       {{! Comments List }}
       <div class="space-y-4">

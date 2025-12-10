@@ -9,6 +9,19 @@ import CustomSelect from 'ticket-desk/components/ui/SelectDropDown.gjs';
 import TagInput from 'ticket-desk/components/ui/Input.gjs';
 import { array } from '@ember/helper';
 
+function getDaysDifference(dateStr) {
+  const today = new Date();
+  const givenDate = new Date(dateStr);
+  return Math.floor((today - givenDate) / (1000 * 60 * 60 * 24));
+}
+
+function getPeriodLabel(days) {
+  if (days <= 7) return { label: 'Last 7 days', value: '7' };
+  if (days <= 30) return { label: 'Last Month', value: '30' };
+  if (days <= 90) return { label: 'Last 90 days', value: '90' };
+  return 'Custom';
+}
+
 export default class FilterSidebarComponent extends Component {
   /* ------------------ REQUIRED STATES ONLY ------------------ */
 
@@ -16,22 +29,23 @@ export default class FilterSidebarComponent extends Component {
   @tracked searchQuery = '';
 
   // Created Period
-  @tracked createdPeriod = 'Last 6 months';
-
+  @tracked createdPeriod = '';
+  @tracked statusSearch = '';
+  @tracked sourceSearch = '';
+  @tracked selectedPriority = [];
   // CustomSelect dropdowns
   @tracked agentSearch = '';
   @tracked departmentSearch = '';
   @tracked groupSearch = '';
   @tracked plannedStartDate = 'Select a time period';
   @tracked plannedEndDate = 'Select a time period';
-  @tracked statusSearch = '';
-  @tracked sourceSearch = '';
+
   @tracked selectedCategory = 'Select';
 
   // Checkbox Group groups
   @tracked selectedDueBy = [];
   @tracked selectedFirstResponse = [];
-  @tracked selectedPriority = [];
+
   @tracked selectedUrgency = [];
   @tracked selectedImpact = [];
   @tracked selectedType = [];
@@ -39,6 +53,12 @@ export default class FilterSidebarComponent extends Component {
   // Tags + Requester
   @tracked requesterSearch = '';
   @tracked tagsSearch = '';
+
+  constructor() {
+    super(...arguments);
+    this.populateFilters();
+    console.log('filterData', this.args.filterData);
+  }
 
   /* ------------------ ACTIONS (ONLY REQUIRED ONES) ------------------ */
 
@@ -101,11 +121,55 @@ export default class FilterSidebarComponent extends Component {
 
   @action triggerApiCall() {}
 
+  @action handleSubmitFilterValues(e) {
+    e.preventDefault();
+    const newObj = {
+      created_at: this.createdPeriod,
+      status: this.statusSearch,
+      priority: this.selectedPriority,
+      source: this.sourceSearch,
+    };
+    this.args.onApplyFilter(newObj);
+  }
+  parseQuery(queryString) {
+    const params = new URLSearchParams(queryString);
+    const result = {};
+
+    for (let [key, value] of params.entries()) {
+      if (key.endsWith('[]')) {
+        key = key.replace('[]', '');
+        result[key] = result[key] || [];
+        result[key].push(value);
+      } else {
+        result[key] = value;
+      }
+    }
+
+    return result;
+  }
+  populateFilters() {
+    const query = this.args.filterData;
+    if (!query) return;
+
+    const parsed = this.parseQuery(query);
+
+    this.statusSearch = parsed['q[status_eq]'] || '';
+    this.sourceSearch = parsed['q[source_eq]'] || '';
+    this.selectedPriority = parsed['q[priority_in]'] || [];
+
+    const createdAt = parsed['q[created_at_gteq]'];
+    if (createdAt) {
+      const diff = getDaysDifference(createdAt);
+      this.createdPeriod = getPeriodLabel(diff);
+      console.log('createdAt', this.createdPeriod);
+    }
+  }
+
   <template>
     <div
       class="w-full h-screen bg-gray-1003 border-l border-gray-200 flex flex-col"
       style="height: calc(100vh - 72px);"
-    >
+    >status
 
       {{! FIXED HEADER }}
       <div class="shrink-0 sticky top-0 z-10 border-b border-gray-200 px-4 py-3">
@@ -136,72 +200,72 @@ export default class FilterSidebarComponent extends Component {
         />
 
         {{! Agents }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.agentSearch}}
           @options={{array "Select"}}
           @onChange={{this.updateAgentSearch}}
           @label="Agents"
-        />
+        /> --}}
 
         {{! Requesters }}
-        <TagInput
+        {{!-- <TagInput
           @label="Requesters"
           @value={{this.requesterSearch}}
           @onChange={{this.updateRequesterSearch}}
-        />
+        /> --}}
 
-        {{! Departments }}
+        {{!-- {{! Departments }}
         <CustomSelect
           @value={{this.departmentSearch}}
           @options={{array "Select"}}
           @onChange={{this.updateDepartmentSearch}}
           @label="Departments"
-        />
+        /> --}}
 
-        {{! Groups }}
+        {{!-- {{! Groups }}
         <CustomSelect
           @value={{this.groupSearch}}
           @options={{array "Select"}}
           @onChange={{this.updateGroupSearch}}
           @label="Groups"
-        />
+        /> --}}
 
-        {{! Planned Start Date }}
+        {{!-- {{! Planned Start Date }}
         <CustomSelect
           @value={{this.plannedStartDate}}
           @options={{array "Select a time period"}}
           @onChange={{this.updatePlannedStartDate}}
           @label="Planned Start Date"
-        />
+        /> --}}
 
-        {{! Planned End Date }}
+        {{!-- {{! Planned End Date }}
         <CustomSelect
           @value={{this.plannedEndDate}}
           @options={{array "Select a time period"}}
           @onChange={{this.updatePlannedEndDate}}
           @label="Planned End Date"
-        />
+        /> --}}
 
         {{! Due By }}
-        <CheckboxGroup
+        {{!-- <CheckboxGroup
           @options={{array "Overdue" "Tomorrow" "Next 8 Hours"}}
           @selected={{this.selectedDueBy}}
           @onChange={{fn this.updateCheckboxGroup "selectedDueBy"}}
           @label="Due By"
-        />
+        /> --}}
 
         {{! First Response }}
-        <CheckboxGroup
+        {{!-- <CheckboxGroup
           @options={{array "Overdue" "Due Today"}}
           @selected={{this.selectedFirstResponse}}
           @onChange={{fn this.updateCheckboxGroup "selectedFirstResponse"}}
           @label="Response"
-        />
+        /> --}}
 
         {{! Status }}
         <CustomSelect
           @value={{this.statusSearch}}
-          @options={{array "Select"}}
+          @options={{@statusOptions}}
           @onChange={{this.updateStatusSearch}}
           @label="Status"
         />
@@ -214,34 +278,34 @@ export default class FilterSidebarComponent extends Component {
           @label="Priority"
         />
 
-        {{! Urgency }}
+        {{!-- {{! Urgency }}
         <CheckboxGroup
           @options={{@urgencyOptions}}
           @selected={{this.selectedUrgency}}
           @onChange={{fn this.updateCheckboxGroup "selectedUrgency"}}
           @label="Urgency"
-        />
-
+        /> --}}
+        {{!-- 
         {{! Impact }}
         <CheckboxGroup
           @options={{@impactOptions}}
           @selected={{this.selectedImpact}}
           @onChange={{fn this.updateCheckboxGroup "selectedImpact"}}
           @label="Impact"
-        />
+        /> --}}
 
         {{! Type }}
-        <CheckboxGroup
+        {{!-- <CheckboxGroup
           @options={{@typeOptions}}
           @selected={{this.selectedType}}
           @onChange={{fn this.updateCheckboxGroup "selectedType"}}
           @label="Type"
-        />
+        /> --}}
 
         {{! Source }}
         <CustomSelect
           @value={{this.sourceSearch}}
-          @options={{array "Select"}}
+          @options={{@sourceOptions}}
           @onChange={{this.updateSourceSearch}}
           @label="Source"
         />
@@ -250,12 +314,12 @@ export default class FilterSidebarComponent extends Component {
         {{!-- <TagInput @label="Tags" @value={{this.tagsSearch}} @onChange={{this.updateTagsSearch}} /> --}}
 
         {{! Category }}
-        <CustomSelect
+        {{!-- <CustomSelect
           @value={{this.selectedCategory}}
           @options={{array "Select"}}
           @onChange={{this.updateCategory}}
           @label="Category"
-        />
+        /> --}}
 
       </div>
 
@@ -264,6 +328,7 @@ export default class FilterSidebarComponent extends Component {
         <button
           type="button"
           class="w-full px-1.5 py-1.5 text-xs text-white bg-gray-800 rounded-sm shadow-md hover:bg-gray-700 transition"
+          {{on "click" this.handleSubmitFilterValues}}
         >
           Apply filters
         </button>

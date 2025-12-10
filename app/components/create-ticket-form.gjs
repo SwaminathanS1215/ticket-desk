@@ -61,19 +61,19 @@ export default class CreateTicketForm extends Component {
     this.errors = { ...this.errors, [field]: '' };
   }
 
-  // @action
-  // handleFilesChange(files) {
-  //   this.form = {
-  //     ...this.form,
-  //     attachments: files,
-  //   };
-  //   // You can perform additional operations here
-  //   console.log('Updated files:', this.form, files);
+  @action
+  handleFilesChange(files) {
+    this.form = {
+      ...this.form,
+      attachments: files,
+    };
+    // You can perform additional operations here
+    console.log('Updated files:', this.form, files);
 
-  //   // Example: Extract actual File objects for upload
-  //   const fileObjects = files.map((f) => f.file);
-  //   console.log('File objects for upload:', fileObjects);
-  // }
+    // Example: Extract actual File objects for upload
+    const fileObjects = files.map((f) => f.file);
+    console.log('File objects for upload:', fileObjects);
+  }
 
   @action async submit(e) {
     e.preventDefault();
@@ -121,13 +121,13 @@ export default class CreateTicketForm extends Component {
               Requester
               <span class="text-red-500">*</span>
             </label>
-            {{!-- <button
+            {{! <button
               type="button"
               class="text-sm text-teal-600 hover:text-teal-700 flex items-center gap-1"
             >
               <span class="text-lg">⊕</span>
               Add new requester
-            </button> --}}
+            </button> }}
           </div>
           <input
             type="text"
@@ -140,9 +140,9 @@ export default class CreateTicketForm extends Component {
           {{#if this.errors.requestor}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.requestor}}</p>
           {{/if}}
-          {{!-- <div class="mt-1 text-right">
+          {{! <div class="mt-1 text-right">
             <button type="button" class="text-sm text-blue-600 hover:text-blue-700">Add Cc</button>
-          </div> --}}
+          </div> }}
         </div>
 
         <div>
@@ -217,18 +217,7 @@ export default class CreateTicketForm extends Component {
             {{/each}}
           </select>
         </div>
-        <div>
-          <label class="font-medium">Source</label>
-          <select
-            value={{this.form.source}}
-            {{on "input" (fn this.updateField "source")}}
-            class="w-full border px-3 py-2 rounded capitalize"
-          >
-            {{#each @formData.sourceOptions as |opt|}}
-              <option value={{opt}} selected={{isEqual this.form.source opt}}>{{opt}}</option>
-            {{/each}}
-          </select>
-        </div>
+
         <div>
           <label class="font-medium">Assign To</label>
           <select
@@ -251,7 +240,9 @@ export default class CreateTicketForm extends Component {
         </div>
 
         <div>
-          <label class="block text-sm font-normal text-gray-700 mb-2">Description</label>
+          <label class="block text-sm font-normal text-gray-700 mb-2">Description
+            <span class="text-red-500">*</span>
+          </label>
           <textarea
             value={{this.form.description}}
             {{on "input" (fn this.updateField "description")}}
@@ -263,13 +254,11 @@ export default class CreateTicketForm extends Component {
           {{/if}}
         </div>
 
-        {{!-- <FileUploader @onFilesChange={{this.handleFilesChange}} @files={{this.form.attachments}} /> --}}
-
         <div class="flex justify-end gap-3 pt-4 bg-white w-full">
           <button
             type="button"
             class="px-6 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 font-medium"
-            {{on "click"this.goBack}}
+            {{on "click" this.goBack}}
           >
             Cancel
           </button>

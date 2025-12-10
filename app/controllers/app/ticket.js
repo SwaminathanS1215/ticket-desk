@@ -3,114 +3,119 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 
-export default class AppTicketController extends Controller {
+function buildRansackQuery(filters) {
+  const params = [];
+
+  // Helper to format date YYYY-MM-DD
+  const formatDate = (date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  // 1. Created At → last X days → actual date
+  if (filters.created_at?.value) {
+    const daysAgo = parseInt(filters.created_at.value, 10);
+
+    const today = new Date(); // today = 09 Dec 2025
+    const targetDate = new Date(today);
+    targetDate.setDate(today.getDate() - daysAgo); // subtract X days
+
+    const finalDate = formatDate(targetDate); // convert to YYYY-MM-DD
+
+    params.push(`q[created_at_gteq]=${finalDate}`);
+  }
+
+  // 2. Status (single value)
+  if (filters.status) {
+    params.push(`q[status_eq]=${encodeURIComponent(filters.status)}`);
+  }
+
+  // 3. Priority (array → _in)
+  if (Array.isArray(filters.priority) && filters.priority.length > 0) {
+    filters.priority.forEach((p) => {
+      params.push(`q[priority_in][]=${encodeURIComponent(p.toLowerCase())}`);
+    });
+  }
+
+  // 4. Source (single value)
+  if (filters.source) {
+    params.push(`q[source_eq]=${encodeURIComponent(filters.source)}`);
+  }
+
+  return params.join('&');
+}
+
+export default class TicketController extends Controller {
   @service api;
+  @service router;
+
+  // URL Synced Query Params
+  queryParams = ['page', 'per_page', 'sortBy', 'sortOrder', 'filterData'];
 
   @tracked page = 1;
-  @tracked model;
-  @tracked sortBy = 'id'; // default sort field
-  @tracked sortOrder = 'asc'; // asc or desc
+  @tracked per_page = 3;
 
-  itemsPerPage = 10;
+  @tracked sortBy = 'id';
+  @tracked sortOrder = 'asc';
 
-  // Main sorted ticket list
-  get tickets() {
-    if (!this.model?.tickets) return [];
+  @tracked filterData = ''; // filter (open/closed/etc.)
 
-    let sorted = [...this.model.tickets];
-
-    sorted.sort((a, b) => {
-      let fieldA = a[this.sortBy];
-      let fieldB = b[this.sortBy];
-
-      // Convert strings to lowercase to avoid mismatch
-      if (typeof fieldA === 'string') fieldA = fieldA.toLowerCase();
-      if (typeof fieldB === 'string') fieldB = fieldB.toLowerCase();
-
-      if (fieldA < fieldB) return this.sortOrder === 'asc' ? -1 : 1;
-      if (fieldA > fieldB) return this.sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-    return sorted;
+  /**
+   * 🟦 Pagination Actions
+   */
+  @action setPage(opt) {
+    this.per_page = opt;
   }
-
-  get totalTickets() {
-    return this.tickets.length;
-  }
-
-  get totalPages() {
-    return Math.ceil(this.totalTickets / this.itemsPerPage);
-  }
-
-  get paginatedTickets() {
-    const start = (this.page - 1) * this.itemsPerPage;
-    return this.tickets.slice(start, start + this.itemsPerPage);
-  }
-
   @action
   nextPage() {
-    if (this.page < this.totalPages) {
-      this.page++;
-    }
+    this.page = Number(this.page) + 1;
   }
 
   @action
   prevPage() {
     if (this.page > 1) {
-      this.page--;
+      this.page = Number(this.page) - 1;
     }
   }
 
   @action
-  async refreshTickets() {
-    try {
-      const response = await this.api.getJson('/api/version1/tickets');
-      this.model = { ...this.model, tickets: response };
-
-      // Re-sort after refreshing
-      this.applySorting(this.sortBy);
-
-      console.log('Tickets refreshed successfully');
-    } catch (error) {
-      console.error('Error refreshing tickets:', error);
-      alert('Failed to refresh tickets. Please try again.');
-    }
-  }
-
-  @action
-  async deleteTicket(ticketId) {
-    try {
-      await this.api.deleteTicket(`/api/version1/tickets/${ticketId}`);
-      console.log('Ticket deleted:', ticketId);
-
-      await this.refreshTickets();
-
-      if (this.paginatedTickets.length === 0 && this.page > 1) {
-        this.page--;
-      }
-    } catch (error) {
-      console.error('Error deleting ticket:', error);
-      alert('Failed to delete ticket.');
+  goToPage(pageNumber) {
+    if (pageNumber >= 1) {
+      this.page = Number(pageNumber);
     }
   }
 
   /**
-   * 🔥 Sorting Action
+   * 🟩 Sorting Action
    */
   @action
   applySorting(field, order) {
-    console.log('fieldorder', field, order);
-    // if (this.sortBy === field) {
-    //   // Toggle order if same field clicked again
-    //   this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
-    // } else {
-    // Reset to ascending when switching fields
+    console.log('fieldfield', field, order);
     this.sortBy = field.value;
     this.sortOrder = order;
-    // }
-
-    // Reset to page 1 after sorting
     this.page = 1;
+  }
+
+  @action
+  applyFilters(values) {
+    const queryParams = buildRansackQuery(values);
+    this.filterData = queryParams;
+    console.log('valuesvalues', queryParams);
+  }
+
+  /**
+   * 🟥 Delete Ticket + Refresh
+   */
+  @action
+  async deleteTicket(ticketId) {
+    try {
+      await this.api.deleteTicket(`/api/version1/tickets/${ticketId}`);
+
+      // Keep same params; route will refresh model
+      // this.page = this.page; // triggers refresh silently
+      this.router.refresh();
+    } catch (e) {
+      console.error('Delete error:', e);
+      alert('Failed to delete ticket.');
+    }
   }
 }
