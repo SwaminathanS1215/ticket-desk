@@ -20,7 +20,7 @@ export default class AppCreateTicketRoute extends Route {
       status: STATUS_OPTIONS[0].value,
       priority: PRIORITY_OPTIONS[0].value,
       source: SOURCE_OPTIONS[0],
-      // attachments:[]
+      attachments: [],
       users: users,
     };
   }

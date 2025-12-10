@@ -81,7 +81,7 @@ export default class TicketSummaryComponent extends Component {
       </div>
 
       {{! Globe icon }}
-      {{!-- <div class="ml-auto flex items-center">
+      {{! <div class="ml-auto flex items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -98,7 +98,7 @@ export default class TicketSummaryComponent extends Component {
            9m0-18c-2.5 0-4.5 4.03-4.5 9s2 9 4.5 9m-7.5-9h15"
           />
         </svg>
-      </div> --}}
+      </div> }}
 
     </div>
     <div class="mt-12">
@@ -113,6 +113,9 @@ export default class TicketSummaryComponent extends Component {
       @comments={{@details.comments}}
       @postComment={{@postComment}}
       @deleteComment={{@deleteComment}}
+      @uploadFile={{@uploadFile}}
+      @existedFile={{@details.attachment}}
+      @onRemoveExistedFile={{@onRemoveExistedFile}}
     />
   </template>
 }

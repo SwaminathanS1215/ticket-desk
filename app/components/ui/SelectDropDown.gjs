@@ -12,7 +12,7 @@ export default class CustomSelectComponent extends Component {
   @tracked isOpen = false;
 
   get displayValue() {
-    return this.args.value || this.args.placeholder || 'Select';
+    return this.args.value.label || this.args.value || this.args.placeholder || 'Select';
   }
 
   @action
@@ -44,13 +44,8 @@ export default class CustomSelectComponent extends Component {
       }}
       {{clickOutside this.handleClickOutside condition=this.isOpen}}
     >
-      <label
-        class="block text-sm font-normal text-gray-900 mb-2"
-      >{{@label}}</label>
-      <div
-        class="custom-select-wrapper relative"
-        {{on "click" this.toggleDropdown}}
-      >
+      <label class="block text-sm font-normal text-gray-900 mb-2">{{@label}}</label>
+      <div class="custom-select-wrapper relative" {{on "click" this.toggleDropdown}}>
         {{! ... The rest of the content is fine ... }}
         <div
           class="w-full px-3 py-2 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-pointer flex items-center justify-between
@@ -68,14 +63,11 @@ export default class CustomSelectComponent extends Component {
               {{#each @options as |option|}}
                 <div
                   class="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer
-                    {{if
-                      (isEqual @value option)
-                      'bg-blue-50 text-blue-600'
-                      'text-gray-700'
-                    }}"
+                    {{if (isEqual @value option) 'bg-blue-50 text-blue-600' 'text-gray-700'}}"
                   {{on "click" (fn this.selectOption option)}}
                 >
-                  {{option}}
+                  {{if option.label option.label option}}
+
                 </div>
               {{/each}}
             {{else}}

@@ -25,8 +25,8 @@ const tabelHeader = [
     isCheckbox: true,
   },
   {
-    id: 'title',
-    title: 'Title',
+    id: 'subject',
+    title: 'Subject',
     render: (ticket) => ticket.title,
   },
   {
@@ -74,11 +74,16 @@ export default class TicketList extends Component {
     // Or, for specific arguments:
     console.log('Modal data:', this.args.prevPage);
   }
-  @tracked isFilterSidebarVisible = false;
+  @tracked isFilterSidebarVisible = true;
   @tracked selectedTickets = new Set();
 
   get createdOptions() {
-    return ['Last 6 months', 'Last 3 months', 'Last month', 'Last week', 'Custom'];
+    return [
+      { label: 'Last 6 months', value: '180' },
+      { label: 'Last 3 months', value: '90' },
+      { label: 'Last month', value: '30' },
+      { label: 'Last Week', value: '7' },
+    ];
   }
 
   get priorityOptions() {
@@ -97,8 +102,18 @@ export default class TicketList extends Component {
     return ['Incident', 'Service Request', 'Major Incident'];
   }
 
+  get sourceOptions() {
+    return ['phone', 'email', 'chat', 'web'];
+  }
+
+  get statusOptions() {
+    return ['open', 'InProgress', 'resolved', 'OnHold'];
+  }
   get isAllSelected() {
-    return this.selectedTickets.size === this.args.tableData.length;
+    const tickets = this.args.tickets ?? [];
+    const selected = this.selectedTickets ?? [];
+
+    return selected.length > 0 && selected.length === tickets.length;
   }
 
   get isNoneSelected() {
@@ -190,6 +205,7 @@ export default class TicketList extends Component {
           @isPartialSelected={{this.isPartialSelected}}
           @onSelectAll={{this.toggleSelectAll}}
           @onSortOrder={{this.handleSort}}
+          @nextPageEnabled={{@nextPageEnabled}}
         />
         <TicketTable
           @tableHeader={{tabelHeader}}
@@ -198,6 +214,8 @@ export default class TicketList extends Component {
           @onRowSelect={{this.toggleTicketSelection}}
           @onDelete={{this.handleDelete}}
           @onEdit={{this.handleEdit}}
+          @page_view={{@page_view}}
+          @setPage={{@setPage}}
         />
       </div>
 
@@ -216,6 +234,10 @@ export default class TicketList extends Component {
             @urgencyOptions={{this.urgencyOptions}}
             @impactOptions={{this.impactOptions}}
             @typeOptions={{this.typeOptions}}
+            @sourceOptions={{this.sourceOptions}}
+            @statusOptions={{this.statusOptions}}
+            @onApplyFilter={{@onApplyFilter}}
+            @filterData={{@filterData}}
           />
         {{/if}}
       </div>

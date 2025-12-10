@@ -34,4 +34,20 @@ export default class AppTicketDetailsController extends Controller {
       console.error('Error deleting comment:', error);
     }
   }
+  @action async uploadFile(file) {
+    const data = await this.api.postFile(
+      `api/version1/tickets/${this.model.ticket_id}/attachment`,
+      file
+    );
+    this.send('refreshModel');
+    return data;
+  }
+
+  @action async removeAttachment() {
+    const data = await this.api.deleteTicket(
+      `api/version1/tickets/${this.model.ticket_id}/attachment`
+    );
+    this.send('refreshModel');
+    return data;
+  }
 }

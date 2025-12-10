@@ -6,5 +6,7 @@ import TicketSummaryComponent from 'ticket-desk/components/ticket/ticketDetails.
     @details={{@model}}
     @postComment={{@controller.postComment}}
     @deleteComment={{@controller.deleteComment}}
+    @uploadFile={{@controller.uploadFile}}
+    @onRemoveExistedFile={{@controller.removeAttachment}}
   />
 </template>

@@ -7,10 +7,18 @@ import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import UiDropdown from '../ui/dropDown.gjs';
 
 export default class TicketTable extends Component {
   @tracked isDeleteModalOpen = false;
   @tracked ticketToDelete = null;
+
+  pageSizeOptions = [
+    { label: '30 / page', value: 30 },
+    { label: '50 / page', value: 50 },
+    { label: '80 / page', value: 80 },
+    { label: '100 / page', value: 100 },
+  ];
 
   get headers() {
     return this.args.tableHeader ?? [];
@@ -56,93 +64,104 @@ export default class TicketTable extends Component {
   }
 
   <template>
-    <div class="overflow-x-auto rounded-xs border border-gray-200 shadow-sm bg-white">
-      <table class="min-w-full text-left border-collapse">
-        <thead class="bg-gray-100 border-b border-gray-1003">
-          <tr>
-            {{#each this.headers as |col|}}
-              <th class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap">
-                {{col.title}}
-              </th>
-            {{/each}}
-            <th class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap text-center">
-              Actions
-            </th>
-          </tr>
-        </thead>
+    <div class="flex flex-col items-end justify-start">
 
-        <tbody>
-          {{#each this.rows as |ticket|}}
-            <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
+      <div class="w-full overflow-x-auto rounded-xs border border-gray-200 shadow-sm bg-white">
+        <table class="min-w-full text-left border-collapse">
+          <thead class="bg-gray-100 border-b border-gray-1003">
+            <tr>
               {{#each this.headers as |col|}}
-                <td
-                  class="px-4 py-3 text-sm text-gray-900 border-b border-gray-200 whitespace-nowrap"
-                >
-                  {{#if col.isCheckbox}}
-                    <Checkbox
-                      @checked={{this.isRowSelected ticket.ticket_id}}
-                      @onChange={{fn this.rowSelectionHandler ticket.ticket_id}}
-                    />
-                  {{else}}
-                    {{#if (isEqual col.id "title")}}
-                      <LinkTo
-                        @route="app.ticket_details"
-                        @model={{ticket.ticket_id}}
-                        class="text-blue-600 underline"
-                      >
-                        {{col.render ticket}}
-                      </LinkTo>
-                    {{else}}
-                      {{col.render ticket}}
-                    {{/if}}
-                  {{/if}}
-                </td>
+                <th class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap">
+                  {{col.title}}
+                </th>
               {{/each}}
-
-              {{! Actions Column }}
-              <td class="px-4 py-3 text-sm border-b border-gray-200 whitespace-nowrap">
-                <div class="flex items-center justify-center space-x-2">
-                  {{! Edit Button }}
-                  <button
-                    type="button"
-                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors cursor-pointer"
-                    title="Edit"
-                    {{on "click" (fn this.handleEdit ticket)}}
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                  </button>
-
-                  {{! Delete Button }}
-                  <button
-                    type="button"
-                    class="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
-                    title="Delete"
-                    {{on "click" (fn this.openDeleteModal ticket)}}
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </td>
+              <th
+                class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap text-center"
+              >
+                Actions
+              </th>
             </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
+          </thead>
 
+          <tbody>
+            {{#each this.rows as |ticket|}}
+              <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
+                {{#each this.headers as |col|}}
+                  <td
+                    class="px-4 py-3 text-sm text-gray-900 border-b border-gray-200 whitespace-nowrap"
+                  >
+                    {{#if col.isCheckbox}}
+                      <Checkbox
+                        @checked={{this.isRowSelected ticket.ticket_id}}
+                        @onChange={{fn this.rowSelectionHandler ticket.ticket_id}}
+                      />
+                    {{else}}
+                      {{#if (isEqual col.id "subject")}}
+                        <LinkTo
+                          @route="app.ticket_details"
+                          @model={{ticket.ticket_id}}
+                          class="text-blue-600 underline"
+                        >
+                          {{col.render ticket}}
+                        </LinkTo>
+                      {{else}}
+                        {{col.render ticket}}
+                      {{/if}}
+                    {{/if}}
+                  </td>
+                {{/each}}
+
+                {{! Actions Column }}
+                <td class="px-4 py-3 text-sm border-b border-gray-200 whitespace-nowrap">
+                  <div class="flex items-center justify-center space-x-2">
+                    {{! Edit Button }}
+                    <button
+                      type="button"
+                      class="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors cursor-pointer"
+                      title="Edit"
+                      {{on "click" (fn this.handleEdit ticket)}}
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>
+                    </button>
+
+                    {{! Delete Button }}
+                    <button
+                      type="button"
+                      class="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
+                      title="Delete"
+                      {{on "click" (fn this.openDeleteModal ticket)}}
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+
+      </div>
+      <UiDropdown
+        @options={{this.pageSizeOptions}}
+        @selected={{this.args.page_view}}
+        @labelKey="label"
+        @onChange={{this.args.setPage}}
+      />
+    </div>
     {{! Delete Confirmation Modal }}
     <DeleteModal
       @isOpen={{this.isDeleteModalOpen}}

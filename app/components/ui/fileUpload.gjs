@@ -3,60 +3,152 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
-import { fn } from '@ember/helper';
 
 export default class FileUploaderComponent extends Component {
   @tracked errorMessage = '';
+  @tracked isUploading = false;
+  @tracked uploadedFile = null;
 
   acceptedFormats = '.jpg,.jpeg,.png,.pdf';
   acceptedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 
-  get files() {
-    return this.args.files || [];
+  get hasFile() {
+    return this.args.existedFile || this.uploadedFile;
+  }
+
+  get currentFile() {
+    const file = this.args.existedFile;
+    if (!file) return null;
+
+    // Normalize server file format to component format
+    if (file.filename && !file.name) {
+      return {
+        id: file.id || this.generateId(),
+        name: file.filename,
+        size: file.byte_size ? this.formatFileSize(file.byte_size) : null,
+        type: file.content_type,
+        url: file.url,
+        created_at: file.created_at,
+        isUploading: false,
+        isLocal: false,
+        preview: null,
+      };
+    }
+
+    return file;
+  }
+
+  get isImageFile() {
+    const file = this.currentFile;
+    if (!file) return false;
+
+    // Check if it's an image type
+    const type = file.type || file.content_type || '';
+    return type === 'image/jpeg' || type === 'image/png' || type.startsWith('image/');
+  }
+
+  get shouldShowImageIcon() {
+    return this.currentFile?.preview || (this.currentFile?.url && this.isImageFile);
+  }
+
+  get isDisabled() {
+    return this.isUploading || this.hasFile;
   }
 
   @action
   async handleFileSelect(event) {
-    const selectedFiles = Array.from(event.target.files);
+    const selectedFile = event.target.files[0];
     this.errorMessage = '';
 
-    const validFiles = [];
+    if (!selectedFile) return;
 
-    for (const file of selectedFiles) {
-      if (this.validateFile(file)) {
-        const fileObj = {
-          id: this.generateId(),
-          file,
-          name: file.name,
-          size: this.formatFileSize(file.size),
-          type: file.type,
-          preview: null,
-        };
-
-        // Create preview only for images
-        if (file.type.startsWith('image/')) {
-          fileObj.preview = await this.generatePreview(file);
-        }
-
-        validFiles.push(fileObj);
-      }
+    // Validate file
+    if (!this.validateFile(selectedFile)) {
+      event.target.value = '';
+      return;
     }
 
-    if (validFiles.length > 0) {
-      console.log('validFiles', this.files, validFiles);
-      // FIX: Use this.files (which has the fallback) instead of this.args.files
-      const updatedFiles = [...this.args.files, ...validFiles];
-      this.args.onFilesChange(updatedFiles);
-    }
+    // Upload file
+    await this.uploadFile(selectedFile);
 
-    // Reset input so same image can be selected again
+    // Reset input
     event.target.value = '';
   }
 
   @action
-  removeFile(fileId) {
-    const updated = this.files.filter((f) => f.id !== fileId);
-    this.args.onFilesChange(updated);
+  async uploadFile(file) {
+    this.isUploading = true;
+
+    // Create temporary file object with loading state
+    const fileObj = {
+      id: this.generateId(),
+      file,
+      name: file.name,
+      size: this.formatFileSize(file.size),
+      type: file.type,
+      preview: null,
+      isUploading: true,
+      url: null,
+      isLocal: true,
+    };
+
+    // Generate preview for images
+    if (file.type.startsWith('image/')) {
+      fileObj.preview = await this.generatePreview(file);
+    }
+
+    // Set uploading state
+    this.uploadedFile = fileObj;
+
+    try {
+      // Create FormData
+      const formData = new FormData();
+      formData.append('attachment', file);
+
+      const data = await this.args.uploadFile(formData);
+
+      // Update file object with URL from response
+      const updatedFile = {
+        ...fileObj,
+        isUploading: false,
+        url: data.url,
+        isLocal: true,
+      };
+
+      this.uploadedFile = updatedFile;
+      this.isUploading = false;
+
+      // Notify parent if needed
+      if (this.args.onFileChange) {
+        this.args.onFileChange(updatedFile);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      this.errorMessage = `Failed to upload ${file.name}: ${error.message}`;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 700);
+      this.uploadedFile = null;
+      this.isUploading = false;
+    }
+  }
+
+  @action
+  removeFile() {
+    if (this.isUploading) return;
+
+    // If it's an existed file from server, call the API
+    if (this.args.existedFile) {
+      if (this.args.onRemoveExistedFile) {
+        this.args.onRemoveExistedFile(this.args.existedFile);
+      }
+    } else {
+      // Local uploaded file - just clear it
+      this.uploadedFile = null;
+      if (this.args.onFileChange) {
+        this.args.onFileChange(null);
+      }
+    }
   }
 
   generatePreview(file) {
@@ -94,104 +186,160 @@ export default class FileUploaderComponent extends Component {
   }
 
   <template>
-    <div class="w-full">
+    <div class="inline-flex items-center gap-2">
 
-      <!-- UPLOAD AREA -->
-      <div class="mb-4">
+      {{#if this.hasFile}}
+        <!-- FILE PREVIEW POPOVER -->
+        <div class="relative group">
+          <!-- File Icon Button -->
+          <button
+            type="button"
+            disabled={{this.currentFile.isUploading}}
+            class="inline-flex items-center justify-center w-9 h-9 text-blue-600 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition
+              {{if this.currentFile.isUploading 'opacity-50 cursor-not-allowed'}}"
+            title="View attached file"
+          >
+            {{#if this.currentFile.isUploading}}
+              <!-- LOADING SPINNER -->
+              <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            {{else if this.shouldShowImageIcon}}
+              <!-- IMAGE ICON -->
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                ></path>
+              </svg>
+            {{else}}
+              <!-- PDF ICON -->
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 21h10a2 2 0 002-2V9.4a1 1 0 00-.3-.7L13.3 3.3A1 1 0 0012.6 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                ></path>
+              </svg>
+            {{/if}}
+          </button>
+
+          <!-- Hover Preview Card -->
+          <div
+            class="absolute bottom-full right-0 mb-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity z-50"
+          >
+            <div class="bg-white border-2 border-gray-300 rounded-lg shadow-lg p-3 w-64">
+              <div class="flex items-start gap-3">
+                <!-- Preview -->
+                <div class="flex-shrink-0">
+                  {{#if this.currentFile.preview}}
+                    <img
+                      src={{this.currentFile.preview}}
+                      alt={{this.currentFile.name}}
+                      class="w-12 h-12 rounded object-cover border border-gray-200"
+                    />
+                  {{else if this.currentFile.url}}
+                    <img
+                      src={{this.currentFile.url}}
+                      alt={{this.currentFile.name}}
+                      class="w-12 h-12 rounded object-cover border border-gray-200"
+                    />
+                  {{else}}
+                    <div class="w-12 h-12 flex items-center justify-center bg-gray-100 rounded">
+                      <svg
+                        class="w-6 h-6 text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M7 21h10a2 2 0 002-2V9.4a1 1 0 00-.3-.7L13.3 3.3A1 1 0 0012.6 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                        ></path>
+                      </svg>
+                    </div>
+                  {{/if}}
+                </div>
+
+                <!-- File Info -->
+                <div class="flex-1 min-w-0">
+                  <p
+                    class="text-xs font-medium text-gray-900 truncate"
+                  >{{this.currentFile.name}}</p>
+                  {{#if this.currentFile.size}}
+                    <p class="text-xs text-gray-500">{{this.currentFile.size}}</p>
+                  {{/if}}
+                  {{#if this.currentFile.isUploading}}
+                    <p class="text-xs text-blue-600 font-medium">Uploading...</p>
+                  {{/if}}
+                </div>
+              </div>
+
+              <!-- Remove Button -->
+              {{#unless this.currentFile.isUploading}}
+                <button
+                  type="button"
+                  {{on "click" this.removeFile}}
+                  class="mt-2 w-full px-2 py-1 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded transition"
+                >
+                  Remove File
+                </button>
+              {{/unless}}
+            </div>
+          </div>
+        </div>
+
+      {{else}}
+        <!-- UPLOAD BUTTON (+ Icon) -->
         <label
-          class="inline-flex flex-col items-center justify-center w-full px-4 py-6 bg-white border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition"
+          class="inline-flex items-center justify-center w-9 h-9 text-gray-600 bg-gray-100 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 transition
+            {{if this.isDisabled 'opacity-50 cursor-not-allowed pointer-events-none'}}"
+          title="Attach file"
         >
           <input
             type="file"
-            multiple
             accept={{this.acceptedFormats}}
             {{on "change" this.handleFileSelect}}
+            disabled={{this.isDisabled}}
             class="hidden"
           />
-
-          <svg
-            class="w-10 h-10 text-gray-400 mb-3"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              d="M12 4v16m8-8H4"
             ></path>
           </svg>
-
-          <span class="text-sm font-medium text-gray-700">Choose Files</span>
-          <span class="text-xs text-gray-500">JPG, PNG, PDF only (Max 5MB)</span>
         </label>
-      </div>
+      {{/if}}
 
-      <!-- ERROR MESSAGE -->
+      <!-- ERROR MESSAGE (Positioned absolutely or in a tooltip) -->
       {{#if this.errorMessage}}
-        <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p class="text-sm text-red-600">{{this.errorMessage}}</p>
+        <div
+          class="absolute top-full left-0 mt-1 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-600 shadow-lg z-50 max-w-xs"
+        >
+          {{this.errorMessage}}
         </div>
       {{/if}}
 
-      <!-- FILE COUNT -->
-      <div class="mb-2 text-xs text-gray-500">
-        Files selected:
-        {{this.files.length}}
-      </div>
-
-      <!-- FILE LIST -->
-      {{#if this.files.length}}
-        <div class="flex flex-wrap gap-2">
-
-          {{#each this.files as |file|}}
-            <div
-              class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
-            >
-
-              {{! IMAGE PREVIEW }}
-              {{#if file.preview}}
-                <img
-                  src={{file.preview}}
-                  alt={{file.name}}
-                  class="w-5 h-5 rounded-full object-cover"
-                />
-              {{else}}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 21h10a2 2 0 002-2V9.4a1 1 0 00-.3-.7L13.3 3.3A1 1 0 0012.6 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                  >
-                  </path>
-                </svg>
-              {{/if}}
-
-              <span class="max-w-xs truncate">{{file.name}} ({{file.size}})</span>
-
-              <button
-                type="button"
-                {{on "click" (fn this.removeFile file.id)}}
-                class="hover:bg-blue-200 rounded-full p-0.5"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-
-            </div>
-          {{/each}}
-        </div>
-      {{else}}
-        <div class="text-sm text-gray-500">No files selected</div>
-      {{/if}}
     </div>
   </template>
 }
