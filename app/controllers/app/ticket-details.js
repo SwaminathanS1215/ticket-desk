@@ -24,7 +24,7 @@ export default class AppTicketDetailsController extends Controller {
   @action
   async deleteComment(commentId) {
     try {
-      await this.api.deleteTicket(
+      await this.api.delete(
         `/api/version1/tickets/${this.model.ticket_id}/comments/${commentId}`
       );
 
@@ -44,7 +44,7 @@ export default class AppTicketDetailsController extends Controller {
   }
 
   @action async removeAttachment() {
-    const data = await this.api.deleteTicket(
+    const data = await this.api.delete(
       `api/version1/tickets/${this.model.ticket_id}/attachment`
     );
     this.send('refreshModel');

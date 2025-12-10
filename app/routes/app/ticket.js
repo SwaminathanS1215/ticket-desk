@@ -3,6 +3,7 @@ import { service } from '@ember/service';
 
 export default class TicketRoute extends Route {
   @service api;
+  @service session;
 
   queryParams = {
     page: { refreshModel: true },
@@ -28,6 +29,7 @@ export default class TicketRoute extends Route {
       return {
         tickets: response?.tickets || [],
         metaData: response?.meta || {},
+        role: this.session.role,
       };
     } catch (error) {
       console.error('Error fetching tickets:', error);

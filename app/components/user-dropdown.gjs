@@ -28,7 +28,6 @@ export default class UserDropdown extends Component {
   @action async logout() {
     this.isOpen = false;
     await this.auth.logout();
-    this.router.transitionTo('/');
   }
 
   @action
