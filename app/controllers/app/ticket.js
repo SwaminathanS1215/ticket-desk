@@ -108,7 +108,7 @@ export default class TicketController extends Controller {
   @action
   async deleteTicket(ticketId) {
     try {
-      await this.api.deleteTicket(`/api/version1/tickets/${ticketId}`);
+      await this.api.delete(`/api/version1/tickets/${ticketId}`);
 
       // Keep same params; route will refresh model
       // this.page = this.page; // triggers refresh silently

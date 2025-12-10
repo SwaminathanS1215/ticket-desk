@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+import { service } from '@ember/service';
 
 const STORAGE_TOKEN = 'auth_token';
 const STORAGE_REFRESH = 'auth_refresh';
@@ -7,6 +8,8 @@ const STORAGE_ROLE = 'auth_role';
 const STORAGE_EMAIL = 'auth_email';
 
 export default class SessionService extends Service {
+  @service router;
+
   @tracked token = null;
   @tracked refreshToken = null;
   @tracked role = null;
@@ -80,5 +83,6 @@ export default class SessionService extends Service {
     localStorage.removeItem(STORAGE_REFRESH);
     localStorage.removeItem(STORAGE_ROLE);
     localStorage.removeItem(STORAGE_EMAIL);
+    this.router.transitionTo('/');
   }
 }

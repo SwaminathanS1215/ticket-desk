@@ -115,19 +115,19 @@ export default class CreateTicketForm extends Component {
       </h1>
 
       <form {{on "submit" this.submit}} class="space-y-5">
-        <div>
+        {{!-- <div>
           <div class="flex items-center justify-between mb-2">
             <label class="text-sm font-normal text-gray-700">
               Requester
               <span class="text-red-500">*</span>
             </label>
-            {{! <button
+             <button
               type="button"
               class="text-sm text-teal-600 hover:text-teal-700 flex items-center gap-1"
             >
               <span class="text-lg">⊕</span>
               Add new requester
-            </button> }}
+            </button>
           </div>
           <input
             type="text"
@@ -140,9 +140,28 @@ export default class CreateTicketForm extends Component {
           {{#if this.errors.requestor}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.requestor}}</p>
           {{/if}}
-          {{! <div class="mt-1 text-right">
+          {<div class="mt-1 text-right">
             <button type="button" class="text-sm text-blue-600 hover:text-blue-700">Add Cc</button>
-          </div> }}
+          </div>
+        </div> --}}
+
+        <div>
+          <label class="font-medium">Requestor</label>
+          <select
+            value={{this.form.requestor}}
+            {{on "change" (fn this.updateField "requestor")}}
+            class="w-full border px-3 py-2 rounded"
+          >
+            {{#each @formData.users as |user|}}
+              <option value={{user.email}} selected={{isEqual this.form.requestor user.email}}>
+                {{user.name}}
+                ({{user.email}})
+              </option>
+            {{/each}}
+          </select>
+          {{#if this.errors.requestor}}
+            <p class="text-xs text-red-600 mt-1">{{this.errors.requestor}}</p>
+          {{/if}}
         </div>
 
         <div>
@@ -171,7 +190,10 @@ export default class CreateTicketForm extends Component {
             style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
           >
             {{#each @formData.sourceOptions as |opt|}}
-              <option value={{opt}} selected={{isEqual this.form.source opt}}>{{opt}}</option>
+              <option
+                value={{opt.value}}
+                selected={{isEqual this.form.source opt.value}}
+              >{{opt.label}}</option>
             {{/each}}
           </select>
         </div>
@@ -193,6 +215,7 @@ export default class CreateTicketForm extends Component {
               <option
                 selected={{isEqual this.form.status s.value}}
                 value={{s.value}}
+                disabled={{s.disabled}}
               >{{s.label}}</option>
             {{/each}}
           </select>
@@ -202,7 +225,7 @@ export default class CreateTicketForm extends Component {
         </div>
 
         <div>
-          <label class="block text-sm font-normal text-gray-700 mb-2">Urgency</label>
+          <label class="block text-sm font-normal text-gray-700 mb-2">Priority</label>
           <select
             value={{this.form.priority}}
             {{on "change" (fn this.updateField "priority")}}

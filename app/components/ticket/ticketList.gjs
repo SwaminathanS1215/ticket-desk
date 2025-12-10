@@ -76,6 +76,7 @@ export default class TicketList extends Component {
   }
   @tracked isFilterSidebarVisible = true;
   @tracked selectedTickets = new Set();
+  @tracked role = this.args.role;
 
   get createdOptions() {
     return [
@@ -216,6 +217,7 @@ export default class TicketList extends Component {
           @onEdit={{this.handleEdit}}
           @page_view={{@page_view}}
           @setPage={{@setPage}}
+          @role={{@role}}
         />
       </div>
 

@@ -3,12 +3,16 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import clickOutside from 'ticket-desk/modifiers/click-outside.js';
+import { service } from '@ember/service';
+import eq from 'ticket-desk/helpers/is-equal';
+import gt from 'ticket-desk/helpers/is-equal';
 
 export default class NotificationBell extends Component {
   @tracked isOpen = false;
+  @service notificationService;
 
   get notifications() {
-    return this.args.items ?? [];
+    return this.notificationService.items ?? [];
   }
 
   @action toggleMenu(e) {
@@ -46,7 +50,7 @@ export default class NotificationBell extends Component {
             d="M15 17h5l-1.405-1.405C17.214 14.214 17 13.11 17 12V9c0-2.21-1.79-4-4-4S9 6.79 9 9v3c0 1.11-.214 2.214-.595 3.595L7 17h5m3 0v1a2 2 0 11-4 0v-1m4 0H9"
           />
         </svg>
-
+        {{!-- {{}} --}}
         <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></span>
       </button>
 
@@ -69,7 +73,7 @@ export default class NotificationBell extends Component {
           </div>
 
           <!-- Mobile App Banner -->
-          {{!-- <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          {{! <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div class="flex items-start gap-3">
               <div class="flex-shrink-0">
                 <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -103,10 +107,10 @@ export default class NotificationBell extends Component {
                 </button>
               </div>
             </div>
-          </div> --}}
+          </div> }}
 
           <!-- Filter Tabs -->
-          {{!-- <div class="flex gap-2 px-6 py-3 border-b border-gray-200 bg-white">
+          {{! <div class="flex gap-2 px-6 py-3 border-b border-gray-200 bg-white">
             <button
               type="button"
               class="px-4 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700"
@@ -125,7 +129,7 @@ export default class NotificationBell extends Component {
             >
               Discussions
             </button>
-          </div> --}}
+          </div> }}
 
           <!-- Notifications List -->
           <ul class="max-h-96 overflow-y-auto divide-y divide-gray-200">
@@ -170,14 +174,20 @@ export default class NotificationBell extends Component {
             {{/each}}
           </ul>
 
-          <!-- Footer -->
-          <button
-            class="w-full text-center px-6 py-3 text-sm font-medium text-blue-600 hover:bg-gray-50 border-t border-gray-200 transition-colors"
-            type="button"
-            {{on "click" this.closeMenu}}
-          >
-            View all
-          </button>
+          {{#if (eq this.notifications.length 0)}}
+            <div class="px-6 py-4">
+              <p class="text-sm text-gray-600">No new notifications</p>
+            </div>
+          {{/if}}
+          {{#if (gt this.notifications.length 5)}}
+            <button
+              class="w-full text-center px-6 py-3 text-sm font-medium text-blue-600 hover:bg-gray-50 border-t border-gray-200 transition-colors"
+              type="button"
+              {{on "click" this.closeMenu}}
+            >
+              View all
+            </button>
+          {{/if}}
         </div>
       {{/if}}
 
