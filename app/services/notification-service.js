@@ -6,6 +6,8 @@ import { API_ENDPOINTS } from '../constants';
 export default class NotificationsService extends Service {
   @tracked items = [];
   @service api;
+  @service session;
+  @tracked hasUnread = false;
 
   constructor() {
     super(...arguments);
@@ -14,11 +16,22 @@ export default class NotificationsService extends Service {
 
   async startPolling() {
     this.load();
-    setInterval(() => this.load(), 5000);
+    const interval = setInterval(() => {
+      if (!this.session.isAuthenticated) {
+        clearInterval(interval);
+        return;
+      }
+      this.load();
+    }, 5000);
   }
 
   async load() {
     const res = await this.api.getJson(API_ENDPOINTS.GET_NOTIFICATIONS);
+    if(res.some((item) => !item.read)) {
+      this.hasUnread = true;
+    } else {
+      this.hasUnread = false;
+    }
     this.items = res;
   }
 

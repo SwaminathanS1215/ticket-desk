@@ -12,7 +12,7 @@ export default class AppRoute extends Route {
       this.router.transitionTo('/');
     }
     await this.notificationService.load();
-    if(!this.enumsService.properties || Object.keys(this.enumsService.properties).length === 0) {
+    if(!this.enumsService.properties && !localStorage.getItem('enums')) {
       await this.enumsService.load();
     }
   }

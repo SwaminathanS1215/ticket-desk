@@ -6,6 +6,7 @@ import { fn } from '@ember/helper';
 import isEqual from 'ticket-desk/helpers/is-equal';
 import { STATUS_OPTIONS, PRIORITY_OPTIONS, SOURCE_OPTIONS } from '../constants.js';
 import FileUploader from './ui/fileUpload.gjs';
+import eq from 'ticket-desk/helpers/is-equal';
 
 export default class CreateTicketForm extends Component {
   @tracked form = { ...this.args.formData };
@@ -220,8 +221,9 @@ export default class CreateTicketForm extends Component {
             value={{this.form.status}}
             {{on "change" (fn this.updateField "status")}}
             class="w-full border border-gray-300 px-3 py-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none
-              {{if this.errors.status 'border-red-500'}}"
+              {{if this.errors.status 'border-red-500'}} disabled:bg-gray-100"
             style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
+            disabled={{eq @isEdit false}}
           >
             <option value="">Select status</option>
             {{#each @formData.statusOptions as |s|}}

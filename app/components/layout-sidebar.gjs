@@ -3,7 +3,7 @@ import { service } from '@ember/service';
 import { LinkTo } from '@ember/routing';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
-import { HomeIcon, TicketIcon, ChevronIcon, AtomIcon, ArrowIcon } from '../utils/icons';
+import { HomeIcon, TicketIcon, ChevronIcon, AtomIcon, ArrowIcon, TicketDeskIcon } from '../utils/icons';
 import { tracked } from '@glimmer/tracking';
 import eq from 'ticket-desk/helpers/is-equal';
 import { fn } from '@ember/helper';
@@ -17,6 +17,7 @@ export default class LayoutSidebar extends Component {
   TicketIcon = TicketIcon;
   AtomIcon = AtomIcon;
   ArrowIcon = ArrowIcon;
+  TicketDeskIcon = TicketDeskIcon;
 
   @action toggleSidebar() {
     this.sidebar.toggle();
@@ -37,7 +38,11 @@ export default class LayoutSidebar extends Component {
         style={{this.sidebar.sidebarStyle}}
       >
 
-        <div class="flex items-center justify-start gap-5 mt-6">
+        <div class="flex items-center justify-center gap-5 mt-6">
+          {{this.TicketIcon}}
+          {{#unless this.sidebar.collapsed}}
+            <span class="text-xl font-bold mr-2">Ticket Desk</span>
+          {{/unless}}
         </div>
 
         <button
@@ -83,7 +88,7 @@ export default class LayoutSidebar extends Component {
                 @route="app.dashboard"
                 @activeClass="bg-white text-gray-1002"
                 class="flex items-center gap-4 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white {{if this.sidebar.collapsed 'justify-center px-0 w-[40px] m-auto' 'px-5 w-full'}}"
-                {{on "click" (fn this.setActive "dashboard")}}
+                {{!-- {{on "click" (fn this.setActive "dashboard")}} --}}
               >
                 {{this.HomeIcon}}
                 {{#unless this.sidebar.collapsed}}
@@ -97,9 +102,9 @@ export default class LayoutSidebar extends Component {
                 @route="app.ticket"
                 @activeClass="bg-white text-gray-1002"
                 class="flex items-center gap-4 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white {{if this.sidebar.collapsed 'justify-center px-0 w-[40px] m-auto' 'px-5 w-full'}}"
-                {{on "click" (fn this.setActive "tickets")}}
+                {{!-- {{on "click" (fn this.setActive "tickets")}} --}}
               >
-                {{this.TicketIcon}}
+                {{this.TicketDeskIcon}}
                 {{#unless this.sidebar.collapsed}}
                   Ticket List
                 {{/unless}}

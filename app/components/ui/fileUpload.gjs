@@ -9,8 +9,8 @@ export default class FileUploaderComponent extends Component {
   @tracked isUploading = false;
   @tracked uploadedFile = null;
 
-  acceptedFormats = '.jpg,.jpeg,.png,.pdf';
-  acceptedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+  acceptedFormats = 'pdf';
+  acceptedMimeTypes = ['application/pdf'];
 
   get hasFile() {
     return this.args.existedFile;

@@ -9,10 +9,13 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import UiDropdown from '../ui/dropDown.gjs';
 import eq from 'ticket-desk/helpers/is-equal';
+import { service } from '@ember/service';
 
 export default class TicketTable extends Component {
   @tracked isDeleteModalOpen = false;
   @tracked ticketToDelete = null;
+
+  @service session;
 
   pageSizeOptions = [
     { label: '5 / page', value: 5 },
@@ -73,7 +76,7 @@ export default class TicketTable extends Component {
           <thead class="bg-gray-100 border-b border-gray-1003">
             <tr>
               {{#each this.headers as |col|}}
-                <th class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap">
+                <th class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap text-center">
                   {{col.title}}
                 </th>
               {{/each}}
@@ -90,7 +93,7 @@ export default class TicketTable extends Component {
               <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
                 {{#each this.headers as |col|}}
                   <td
-                    class="px-4 py-3 text-sm text-gray-900 border-b border-gray-200 whitespace-nowrap"
+                    class="px-4 py-3 text-sm text-gray-900 border-b border-gray-200 whitespace-nowrap text-center"
                   >
                     {{#if col.isCheckbox}}
                       <Checkbox
@@ -133,7 +136,7 @@ export default class TicketTable extends Component {
                       </svg>
                     </button>
 
-                    {{#if (eq @this.args.role "admin")}}
+                    {{#if (eq this.session.role "admin")}}
                     <button
                       type="button"
                       class="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"

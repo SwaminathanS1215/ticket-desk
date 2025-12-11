@@ -7,17 +7,7 @@ import isEqual from 'ticket-desk/helpers/is-equal';
 import { fn } from '@ember/helper';
 import { service } from '@ember/service';
 import FileUploader from '../ui/fileUpload.gjs';
-
-// Format ISO date: 2025-11-27T13:15:30.328Z → 27/11/2025
-function formatDate(dateString) {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  let dd = String(date.getDate()).padStart(2, '0');
-  let mm = String(date.getMonth() + 1).padStart(2, '0');
-  let yyyy = date.getFullYear();
-
-  return `${dd}/${mm}/${yyyy}`;
-}
+import formatDateTime from 'ticket-desk/utils/format-date-time';
 
 function getInitials(name) {
   if (!name) return '';
@@ -248,7 +238,7 @@ export default class CommentSectionComponent extends Component {
                           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      {{formatDate this.existedFile.created_at}}
+                      {{formatDateTime this.existedFile.created_at}}
                     </span>
                   </div>
 
@@ -316,7 +306,7 @@ export default class CommentSectionComponent extends Component {
                 <div class="flex items-center gap-2">
                   <span class="font-semibold text-gray-900">{{comment.author}}</span>
                   <span class="text-xs text-gray-500">
-                    {{formatDate comment.created_at}}
+                    {{formatDateTime comment.created_at}}
                   </span>
                 </div>
 

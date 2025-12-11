@@ -144,3 +144,13 @@ export const AtomIcon = () => {
     </svg>`
   );
 };
+
+export const TicketDeskIcon = () => {
+  return htmlSafe(` 
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+  <rect x="3" y="7" width="18" height="10" rx="2"/>
+  <path d="M7 7v10M17 7v10"/>
+  <circle cx="12" cy="12" r="1.5"/>
+</svg>`);
+};

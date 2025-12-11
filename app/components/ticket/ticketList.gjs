@@ -6,6 +6,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { fn } from '@ember/helper';
 import { service } from '@ember/service';
+import formatDateTime from 'ticket-desk/utils/format-date-time';
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -57,12 +58,12 @@ const tabelHeader = [
   {
     id: 'created_at',
     title: 'Created At',
-    render: (ticket) => formatDate(ticket.created_at),
+    render: (ticket) => formatDateTime(ticket.created_at),
   },
   {
     id: 'updated_at',
     title: 'Updated At',
-    render: (ticket) => formatDate(ticket.updated_at),
+    render: (ticket) => formatDateTime(ticket.updated_at),
   },
 ];
 
