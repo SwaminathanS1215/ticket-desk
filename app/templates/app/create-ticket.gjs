@@ -6,6 +6,7 @@ import CreateTicketForm from '../../components/create-ticket-form.gjs';
       @formData={{@model}}
       @onSubmit={{@controller.createTicket}}
       @uploadFile={{@controller.uploadFile}}
+      @isEdit={{false}}
     />
   </div>
 </template>

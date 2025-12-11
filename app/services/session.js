@@ -79,10 +79,11 @@ export default class SessionService extends Service {
     this.role = null;
     this.email = null;
 
-    localStorage.removeItem(STORAGE_TOKEN);
-    localStorage.removeItem(STORAGE_REFRESH);
-    localStorage.removeItem(STORAGE_ROLE);
-    localStorage.removeItem(STORAGE_EMAIL);
+    this.clearLocalStorage();
     this.router.transitionTo('/');
   }
+
+  clearLocalStorage() {
+    localStorage.clear();
+  } 
 }

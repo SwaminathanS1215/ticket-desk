@@ -1,32 +1,7 @@
 import Component from '@glimmer/component';
 import CommentSectionComponent from './commentSection.gjs';
 import { LinkTo } from '@ember/routing';
-
-export function formatReportedDate(dateString) {
-  const date = new Date(dateString);
-  const now = new Date();
-
-  // 1. Calculate days difference
-  const diffMs = now - date;
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  // "x days ago" or "Today"
-  let daysAgo = diffDays === 0 ? 'Today' : `${diffDays} days ago`;
-
-  // 2. Format readable date: "Tue, 18 Nov 6:10 AM"
-  const options = {
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  };
-
-  const formatted = date.toLocaleString('en-US', options);
-
-  return `reported ${daysAgo} (${formatted}) via Portal`;
-}
+import formatDateTime from 'ticket-desk/utils/format-date-time';
 
 export default class TicketSummaryComponent extends Component {
   <template>
@@ -73,9 +48,8 @@ export default class TicketSummaryComponent extends Component {
         </h2>
 
         <p class="text-sm text-gray-700">
-          <span class="font-medium">{{@details.requestor}}</span>
-          <span class="text-gray-500 ml-1">
-            {{formatReportedDate @details.created_at}}
+          <span class="text-gray-500">
+            Created on {{formatDateTime @details.created_at}} by {{@details.requestor}}
           </span>
         </p>
       </div>
