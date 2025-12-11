@@ -18,6 +18,7 @@ export default class TicketTemplate extends Component {
       @onApplyFilter={{@controller.applyFilters}}
       @filterData={{@controller.filterData}}
       @onReset={{@controller.onReset}}
+      @role={{@model.role}}
     />
   </template>
 }

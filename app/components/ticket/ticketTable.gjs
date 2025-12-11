@@ -8,6 +8,7 @@ import { on } from '@ember/modifier';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import UiDropdown from '../ui/dropDown.gjs';
+import eq from 'ticket-desk/helpers/is-equal';
 
 export default class TicketTable extends Component {
   @tracked isDeleteModalOpen = false;
@@ -132,7 +133,7 @@ export default class TicketTable extends Component {
                       </svg>
                     </button>
 
-                    {{! Delete Button }}
+                    {{#if (eq @this.args.role "admin")}}
                     <button
                       type="button"
                       class="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
@@ -148,6 +149,7 @@ export default class TicketTable extends Component {
                         />
                       </svg>
                     </button>
+                    {{/if}}
                   </div>
                 </td>
               </tr>
