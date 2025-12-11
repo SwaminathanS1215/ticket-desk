@@ -238,6 +238,7 @@ export default class TicketList extends Component {
             @statusOptions={{this.statusOptions}}
             @onApplyFilter={{@onApplyFilter}}
             @filterData={{@filterData}}
+            @onReset={{@onReset}}
           />
         {{/if}}
       </div>

@@ -13,7 +13,7 @@ export default class FileUploaderComponent extends Component {
   acceptedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 
   get hasFile() {
-    return this.args.existedFile || this.uploadedFile;
+    return this.args.existedFile;
   }
 
   get currentFile() {

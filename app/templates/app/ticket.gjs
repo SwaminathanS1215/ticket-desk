@@ -17,6 +17,7 @@ export default class TicketTemplate extends Component {
       @onSort={{@controller.applySorting}}
       @onApplyFilter={{@controller.applyFilters}}
       @filterData={{@controller.filterData}}
+      @onReset={{@controller.onReset}}
     />
   </template>
 }

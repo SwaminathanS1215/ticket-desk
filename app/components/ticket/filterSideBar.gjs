@@ -62,6 +62,14 @@ export default class FilterSidebarComponent extends Component {
 
   /* ------------------ ACTIONS (ONLY REQUIRED ONES) ------------------ */
 
+  get isApplyDisabled() {
+    return (
+      !this.createdPeriod &&
+      !this.statusSearch &&
+      !this.sourceSearch &&
+      this.selectedPriority.length === 0
+    );
+  }
   @action updateSearch(e) {
     this.searchQuery = e.target.value;
   }
@@ -120,6 +128,15 @@ export default class FilterSidebarComponent extends Component {
   }
 
   @action triggerApiCall() {}
+  @action resetFilter() {
+    console.log('filhgshjsterData', this.selectedPriority);
+
+    this.createdPeriod = '';
+    this.statusSearch = '';
+    this.sourceSearch = '';
+    this.selectedPriority = [];
+    this.args.onReset();
+  }
 
   @action handleSubmitFilterValues(e) {
     e.preventDefault();
@@ -324,13 +341,21 @@ export default class FilterSidebarComponent extends Component {
       </div>
 
       {{! FIXED FOOTER }}
-      <div class="shrink-0 bg-gray-1003 border-t border-gray-200 px-4 py-3">
+      <div class="shrink-0 flex gap-1 bg-gray-1003 border-t border-gray-200 px-4 py-3">
         <button
           type="button"
-          class="w-full px-1.5 py-1.5 text-xs text-white bg-gray-800 rounded-sm shadow-md hover:bg-gray-700 transition"
+          class="cursor-pointer w-full flex-1 px-1.5 py-1.5 text-xs text-white bg-gray-800 rounded-sm shadow-md hover:bg-gray-700 transition disabled:opacity-50"
+          disabled={{this.isApplyDisabled}}
           {{on "click" this.handleSubmitFilterValues}}
         >
           Apply filters
+        </button>
+        <button
+          type="button"
+          class="w-[70px] cursor-pointer px-1.5 py-1.5 text-xs text-gray-800 bg-white border-1 border-gray-800 rounded-sm shadow-md hover:bg-gray-800 hover:text-white transition"
+          {{on "click" this.resetFilter}}
+        >
+          Reset
         </button>
       </div>
 
