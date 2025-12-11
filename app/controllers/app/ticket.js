@@ -52,7 +52,7 @@ export default class TicketController extends Controller {
   queryParams = ['page', 'per_page', 'sortBy', 'sortOrder', 'filterData'];
 
   @tracked page = 1;
-  @tracked per_page = 3;
+  @tracked per_page = 5;
 
   @tracked sortBy = 'id';
   @tracked sortOrder = 'asc';
@@ -100,6 +100,11 @@ export default class TicketController extends Controller {
     const queryParams = buildRansackQuery(values);
     this.filterData = queryParams;
     console.log('valuesvalues', queryParams);
+  }
+
+  @action
+  onReset() {
+    this.filterData = '';
   }
 
   /**

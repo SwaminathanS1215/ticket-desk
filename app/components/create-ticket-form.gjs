@@ -57,6 +57,19 @@ export default class CreateTicketForm extends Component {
   }
 
   @action updateField(field, event) {
+    if (field === 'description') {
+      let value = event.target.value;
+      // Enforce 20 character limit (200 for production)
+      value = value.slice(0, 200);
+
+      // Use @tracked or set() to ensure reactivity
+      this.form = { ...this.form, description: value };
+      this.errors = { ...this.errors, [field]: '' };
+
+      // Force the textarea to update if needed
+      event.target.value = value;
+      return;
+    }
     this.form[field] = event.target.value;
     this.errors = { ...this.errors, [field]: '' };
   }
@@ -272,6 +285,7 @@ export default class CreateTicketForm extends Component {
             class="w-full border border-gray-300 px-3 py-2 rounded h-32 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
               {{if this.errors.description 'border-red-500'}}"
           ></textarea>
+          <span class="self-end text-sm text-gray-1001">{{this.form.description.length}}/200</span>
           {{#if this.errors.description}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.description}}</p>
           {{/if}}

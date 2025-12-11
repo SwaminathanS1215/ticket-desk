@@ -15,10 +15,11 @@ export default class TicketTable extends Component {
   @tracked ticketToDelete = null;
 
   pageSizeOptions = [
+    { label: '5 / page', value: 5 },
+    { label: '10 / page', value: 10 },
+    { label: '20 / page', value: 20 },
     { label: '30 / page', value: 30 },
     { label: '50 / page', value: 50 },
-    { label: '80 / page', value: 80 },
-    { label: '100 / page', value: 100 },
   ];
 
   get headers() {

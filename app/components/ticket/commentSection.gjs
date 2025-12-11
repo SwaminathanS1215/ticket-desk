@@ -89,7 +89,12 @@ export default class CommentSectionComponent extends Component {
 
   @action
   updateComment(event) {
-    this.newComment = event.target.value;
+    let value = event.target.value;
+
+    // always trim and force the input value
+    value = value.slice(0, 200);
+
+    this.newComment = value;
   }
 
   @action
@@ -142,15 +147,18 @@ export default class CommentSectionComponent extends Component {
 
       {{! Add Comment }}
       <div class="mb-8">
-        <div class="flex gap-3">
-          <input
-            type="text"
-            value={{this.newComment}}
-            {{on "input" this.updateComment}}
-            placeholder="Write a comment..."
-            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={{this.isSubmitting}}
-          />
+        <div class="flex gap-3 items-start">
+          <div class="flex-1 flex flex-col">
+            <input
+              type="text"
+              value={{this.newComment}}
+              {{on "input" this.updateComment}}
+              placeholder="Write a comment..."
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={{this.isSubmitting}}
+            />
+            <span class="self-end text-sm text-gray-1001">{{this.newComment.length}}/200</span>
+          </div>
 
           <button
             type="button"
@@ -174,7 +182,7 @@ export default class CommentSectionComponent extends Component {
       {{! File Preview Section }}
       {{#if this.existedFile}}
         <div
-          class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200"
+          class="mb-6 px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200"
         >
           <div class="flex items-start gap-4">
 
@@ -182,7 +190,7 @@ export default class CommentSectionComponent extends Component {
             <div class="flex-shrink-0">
               {{#if this.isImage}}
                 {{! Image Preview }}
-                <div class="w-32 h-32 rounded-lg overflow-hidden shadow-md border-2 border-white">
+                <div class="w-16 h-16 rounded-lg overflow-hidden shadow-md border-2 border-white">
                   <img
                     src={{this.existedFile.url}}
                     alt={{this.existedFile.filename}}
@@ -192,9 +200,9 @@ export default class CommentSectionComponent extends Component {
               {{else}}
                 {{! PDF/File Icon }}
                 <div
-                  class="w-32 h-32 rounded-lg bg-white shadow-md border-2 border-gray-200 flex flex-col items-center justify-center"
+                  class="w-16 h-16 rounded-lg bg-white shadow-md border-2 border-gray-200 flex flex-col items-center justify-center"
                 >
-                  <svg class="w-16 h-16 text-red-500 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-6 h-6 text-red-500 mb-2" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fill-rule="evenodd"
                       d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
@@ -216,12 +224,12 @@ export default class CommentSectionComponent extends Component {
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between">
                 <div class="flex-1 min-w-0">
-                  <h3 class="text-lg font-semibold text-gray-800 truncate mb-1">
+                  <h3 class="text-base font-semibold text-gray-800 truncate mb-1">
                     {{this.existedFile.filename}}
                   </h3>
-                  <div class="flex flex-wrap gap-3 text-sm text-gray-600">
+                  <div class="flex flex-wrap gap-3 text-xs text-gray-600">
                     <span class="flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           stroke-linecap="round"
                           stroke-linejoin="round"
@@ -232,7 +240,7 @@ export default class CommentSectionComponent extends Component {
                       {{formatFileSize this.existedFile.byte_size}}
                     </span>
                     <span class="flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           stroke-linecap="round"
                           stroke-linejoin="round"
@@ -245,7 +253,7 @@ export default class CommentSectionComponent extends Component {
                   </div>
 
                   {{! View/Download Link }}
-                  <a
+                  {{!-- <a
                     href={{this.existedFile.url}}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -264,7 +272,7 @@ export default class CommentSectionComponent extends Component {
                     {{else}}
                       Open File
                     {{/if}}
-                  </a>
+                  </a> --}}
                 </div>
 
                 {{! Remove Button }}
