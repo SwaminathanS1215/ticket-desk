@@ -32,7 +32,8 @@ export default class NotificationBell extends Component {
   }
 
   @action
-  async onMarkAllRead() {
+  async onMarkAllRead(e) {
+    e?.stopPropagation?.();
     if (this.notificationService.markAllAsRead) {
       await this.notificationService.markAllAsRead();
     }

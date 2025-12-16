@@ -81,4 +81,8 @@ export const API_ENDPOINTS = {
   GET_ENUMS: '/api/version1/ticket_form_options',
   MARK_NOTIFICATIONS_READ: '/api/version1/notifications/mark_read',
   MARK_ALL_NOTIFICATIONS_READ: '/api/version1/notifications/mark_all_read',
+  FETCH_TICKET_DETAILS: (ticketId) => `/api/version1/tickets/${ticketId}`,
+  FETCH_TICKET_COMMENTS: (ticketId) => `/api/version1/tickets/${ticketId}/comments`,
+  FETCH_USERS: '/api/version1/users',
+  FETCH_TICKET_ATTACHMENT: (ticketId) => `/api/version1/tickets/${ticketId}/attachment`,
 };
