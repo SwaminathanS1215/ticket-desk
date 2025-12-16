@@ -108,7 +108,11 @@ export default class CreateTicketForm extends Component {
     delete payload.users;
 
     try {
-      await this.args.onSubmit(payload);
+      const res = await this.args.onSubmit(payload);
+      if(this.args.isEdit && res){
+        this.form = {...this.form,...res};
+        console.log('Form after update:', this.form);
+      } 
     } finally {
       this.loading = false;
     }
@@ -164,9 +168,9 @@ export default class CreateTicketForm extends Component {
           <select
             value={{this.form.requestor}}
             {{on "change" (fn this.updateField "requestor")}}
-            class="w-full border px-3 py-2 rounded"
+            class="w-full border px-3 py-2 rounded border-gray-300"
           >
-            {{#each @formData.users as |user|}}
+            {{#each this.form.users as |user|}}
               <option value={{user.email}} selected={{isEqual this.form.requestor user.email}}>
                 {{user.name}}
                 ({{user.email}})
@@ -187,8 +191,7 @@ export default class CreateTicketForm extends Component {
             type="text"
             value={{this.form.title}}
             {{on "input" (fn this.updateField "title")}}
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              {{if this.errors.title 'border-red-500'}}"
+            class="w-full border px-3 py-2 rounded border-gray-300"
           />
           {{#if this.errors.title}}
             <p class="text-xs text-red-600 mt-1">{{this.errors.title}}</p>
@@ -200,10 +203,9 @@ export default class CreateTicketForm extends Component {
           <select
             value={{this.form.source}}
             {{on "change" (fn this.updateField "source")}}
-            class="w-full border border-gray-300 px-3 py-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
-            style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
+            class="w-full border px-3 py-2 rounded border-gray-300"
           >
-            {{#each @formData.sourceOptions as |opt|}}
+            {{#each this.form.sourceOptions as |opt|}}
               <option
                 value={{opt.value}}
                 selected={{isEqual this.form.source opt.value}}
@@ -220,13 +222,11 @@ export default class CreateTicketForm extends Component {
           <select
             value={{this.form.status}}
             {{on "change" (fn this.updateField "status")}}
-            class="w-full border border-gray-300 px-3 py-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none
-              {{if this.errors.status 'border-red-500'}} disabled:bg-gray-100"
-            style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
+            class="w-full border px-3 py-2 rounded border-gray-300"
             disabled={{eq @isEdit false}}
           >
             <option value="">Select status</option>
-            {{#each @formData.statusOptions as |s|}}
+            {{#each this.form.statusOptions as |s|}}
               <option
                 selected={{isEqual this.form.status s.value}}
                 value={{s.value}}
@@ -244,10 +244,9 @@ export default class CreateTicketForm extends Component {
           <select
             value={{this.form.priority}}
             {{on "change" (fn this.updateField "priority")}}
-            class="w-full border border-gray-300 px-3 py-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
-            style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
+            class="w-full border px-3 py-2 rounded border-gray-300"
           >
-            {{#each @formData.priorityOptions as |s|}}
+            {{#each this.form.priorityOptions as |s|}}
               <option
                 value={{s.value}}
                 selected={{isEqual this.form.priority s.value}}
@@ -261,11 +260,11 @@ export default class CreateTicketForm extends Component {
           <select
             value={{this.form.assign_to}}
             {{on "change" (fn this.updateField "assign_to")}}
-            class="w-full border px-3 py-2 rounded"
+            class="w-full border px-3 py-2 rounded border-gray-300"
           >
             <option value="">Select assignee</option>
 
-            {{#each @formData.users as |user|}}
+            {{#each this.form.users as |user|}}
               <option value={{user.email}} selected={{isEqual this.form.assign_to user.email}}>
                 {{user.name}}
                 ({{user.email}})

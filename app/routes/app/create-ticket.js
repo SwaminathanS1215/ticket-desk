@@ -16,7 +16,12 @@ export default class AppCreateTicketRoute extends Route {
       title: '',
       description: '',
       assign_to: null,
-      statusOptions: await this.mapStatus(),
+      statusOptions: await getStatusOptions(
+        this.session.role,
+        'open',
+        this.enumsService.properties?.status_transitions,
+        this.enumsService.properties?.status
+      ),
       priorityOptions: this.enumsService.properties?.priority || [],
       sourceOptions: this.enumsService.properties?.source || [],
       status: 'open',
@@ -25,14 +30,5 @@ export default class AppCreateTicketRoute extends Route {
       attachments: [],
       users: users,
     };
-  }
-
-  async mapStatus() {
-    return await getStatusOptions(
-      this.session.role,
-      'open',
-      this.enumsService.properties?.status_transitions,
-      this.enumsService.properties?.status
-    );
   }
 }

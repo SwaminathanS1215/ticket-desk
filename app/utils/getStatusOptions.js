@@ -1,4 +1,4 @@
-export const getStatusOptions = (role, currentStatus, statusOptions, statusLabelMap) => {
+export const getStatusOptions = async (role, currentStatus, statusOptions, statusLabelMap) => {
   const transitions = statusOptions[role] || {};
   const allowed = transitions[currentStatus] || [];
 
