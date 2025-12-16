@@ -36,13 +36,7 @@ export default class ApiService extends Service {
 
     // Handle token refresh
     if (res.status === 401 && retry && token) {
-      try {
-        await this.auth.refresh();
-        return this.request(path, options, { retry: false });
-      } catch (err) {
-        this.session.logout();
-        throw err;
-      }
+      this.session.logout();
     }
 
     return res;

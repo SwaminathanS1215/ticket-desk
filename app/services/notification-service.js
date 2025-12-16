@@ -17,7 +17,7 @@ export default class NotificationsService extends Service {
   async startPolling() {
     this.load();
     const interval = setInterval(() => {
-      if (!this.session.isAuthenticated) {
+      if (!this.session.token) {
         clearInterval(interval);
         return;
       }
