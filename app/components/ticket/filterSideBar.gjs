@@ -186,7 +186,7 @@ export default class FilterSidebarComponent extends Component {
     <div
       class="w-full h-screen bg-gray-1003 border-l border-gray-200 flex flex-col"
       style="height: calc(100vh - 72px);"
-    >status
+    >
 
       {{! FIXED HEADER }}
       <div class="shrink-0 sticky top-0 z-10 border-b border-gray-200 px-4 py-3">

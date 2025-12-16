@@ -76,7 +76,9 @@ export default class TicketTable extends Component {
           <thead class="bg-gray-100 border-b border-gray-1003">
             <tr>
               {{#each this.headers as |col|}}
-                <th class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap text-center">
+                <th
+                  class="px-4 py-3 text-sm font-semibold text-gray-700 whitespace-nowrap text-center"
+                >
                   {{col.title}}
                 </th>
               {{/each}}
@@ -89,84 +91,119 @@ export default class TicketTable extends Component {
           </thead>
 
           <tbody>
-            {{#each this.rows as |ticket|}}
-              <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
-                {{#each this.headers as |col|}}
-                  <td
-                    class="px-4 py-3 text-sm text-gray-900 border-b border-gray-200 whitespace-nowrap text-center"
-                  >
-                    {{#if col.isCheckbox}}
-                      <Checkbox
-                        @checked={{this.isRowSelected ticket.ticket_id}}
-                        @onChange={{fn this.rowSelectionHandler ticket.ticket_id}}
-                      />
-                    {{else}}
-                      {{#if (isEqual col.id "subject")}}
-                        <LinkTo
-                          @route="app.ticket_details"
-                          @model={{ticket.ticket_id}}
-                          class="text-blue-600 underline truncate block max-w-[150px]"
-                        >
-                          {{col.render ticket}}
-                        </LinkTo>
+            {{#if this.rows.length}}
+              {{#each this.rows as |ticket|}}
+                <tr class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
+                  {{#each this.headers as |col|}}
+                    <td
+                      class="px-4 py-3 text-sm text-gray-900 border-b border-gray-200 whitespace-nowrap text-center"
+                    >
+                      {{#if col.isCheckbox}}
+                        <Checkbox
+                          @checked={{this.isRowSelected ticket.ticket_id}}
+                          @onChange={{fn this.rowSelectionHandler ticket.ticket_id}}
+                        />
                       {{else}}
-                        {{col.render ticket}}
+                        {{#if (isEqual col.id "subject")}}
+                          <LinkTo
+                            @route="app.ticket_details"
+                            @model={{ticket.ticket_id}}
+                            class="text-blue-600 underline truncate block max-w-[150px]"
+                          >
+                            {{col.render ticket}}
+                          </LinkTo>
+                        {{else}}
+                          {{col.render ticket}}
+                        {{/if}}
                       {{/if}}
-                    {{/if}}
+                    </td>
+                  {{/each}}
+
+                  {{! Actions Column }}
+                  <td class="px-4 py-3 text-sm border-b border-gray-200 whitespace-nowrap">
+                    <div class="flex items-center justify-center space-x-2">
+                      {{! Edit Button }}
+                      <button
+                        type="button"
+                        class="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors cursor-pointer"
+                        title="Edit"
+                        {{on "click" (fn this.handleEdit ticket)}}
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
+                        </svg>
+                      </button>
+
+                      {{#if (eq this.session.role "admin")}}
+                        <button
+                          type="button"
+                          class="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
+                          title="Delete"
+                          {{on "click" (fn this.openDeleteModal ticket)}}
+                        >
+                          <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                      {{/if}}
+                    </div>
                   </td>
-                {{/each}}
-
-                {{! Actions Column }}
-                <td class="px-4 py-3 text-sm border-b border-gray-200 whitespace-nowrap">
-                  <div class="flex items-center justify-center space-x-2">
-                    {{! Edit Button }}
-                    <button
-                      type="button"
-                      class="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors cursor-pointer"
-                      title="Edit"
-                      {{on "click" (fn this.handleEdit ticket)}}
+                </tr>
+              {{/each}}
+            {{else}}
+              {{! Empty State }}
+              <tr>
+                <td colspan={{this.headers.length}} class="px-4 py-6 text-center">
+                  <div class="flex flex-col items-center justify-center space-y-4">
+                    <svg
+                      class="w-8 h-8 text-gray-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
-                    </button>
-
-                    {{#if (eq this.session.role "admin")}}
-                    <button
-                      type="button"
-                      class="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer"
-                      title="Delete"
-                      {{on "click" (fn this.openDeleteModal ticket)}}
-                    >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                    {{/if}}
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    <div class="space-y-1">
+                      <h3 class="text-base font-semibold text-gray-700">No Tickets Found</h3>
+                      <p class="text-xs text-gray-500">There are no tickets to display at the
+                        moment.</p>
+                    </div>
                   </div>
                 </td>
               </tr>
-            {{/each}}
+            {{/if}}
           </tbody>
         </table>
 
       </div>
-      <UiDropdown
-        @options={{this.pageSizeOptions}}
-        @selected={{this.args.page_view}}
-        @labelKey="label"
-        @onChange={{this.args.setPage}}
-      />
+      {{#if this.rows.length}}
+        <UiDropdown
+          @options={{this.pageSizeOptions}}
+          @selected={{this.args.page_view}}
+          @labelKey="label"
+          @onChange={{this.args.setPage}}
+        />
+      {{/if}}
     </div>
     {{! Delete Confirmation Modal }}
     <DeleteModal
