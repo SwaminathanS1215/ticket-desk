@@ -71,7 +71,7 @@ export default class TicketSummaryComponent extends Component {
         @postComment={{@postComment}}
         @deleteComment={{@deleteComment}}
         @uploadFile={{@uploadFile}}
-        @existedFile={{@details.attachment}}
+        @existedFile={{@existedFile}}
         @onRemoveExistedFile={{@onRemoveExistedFile}}
       />
     </div>
