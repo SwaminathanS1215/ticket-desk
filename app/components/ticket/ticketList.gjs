@@ -125,6 +125,10 @@ export default class TicketList extends Component {
   get isPartialSelected() {
     return !this.isNoneSelected && !this.isAllSelected;
   }
+
+  get currentPageNumber() {
+    return this.args.tableData.length > 0 ? this.args.pageNumber : 0;
+  }
   @action
   toggleFilterSidebar() {
     this.isFilterSidebarVisible = !this.isFilterSidebarVisible;
@@ -198,7 +202,7 @@ export default class TicketList extends Component {
       >
         <TableToolbar
           @toggleFilterSidebar={{this.toggleFilterSidebar}}
-          @page={{@pageNumber}}
+          @page={{this.currentPageNumber}}
           @totalPages={{@totalPagesNumber}}
           @total={{@totalLength}}
           @onPrev={{this.prevPage}}

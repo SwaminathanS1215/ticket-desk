@@ -3,7 +3,14 @@ import { service } from '@ember/service';
 import { LinkTo } from '@ember/routing';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
-import { HomeIcon, TicketIcon, ChevronIcon, AtomIcon, ArrowIcon, TicketDeskIcon } from '../utils/icons';
+import {
+  HomeIcon,
+  TicketIcon,
+  ChevronIcon,
+  AtomIcon,
+  ArrowIcon,
+  TicketDeskIcon,
+} from '../utils/icons';
 import { tracked } from '@glimmer/tracking';
 import eq from 'ticket-desk/helpers/is-equal';
 import { fn } from '@ember/helper';
@@ -75,7 +82,7 @@ export default class LayoutSidebar extends Component {
             {{#if this.sidebar.collapsed}}
               Expand
             {{else}}
-              collapse
+              Collapse
             {{/if}}
           </span>
         </button>
@@ -87,7 +94,8 @@ export default class LayoutSidebar extends Component {
               <LinkTo
                 @route="app.dashboard"
                 @activeClass="bg-white text-gray-1002"
-                class="flex items-center gap-4 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white {{if this.sidebar.collapsed 'justify-center px-0 w-[40px] m-auto' 'px-5 w-full'}}"
+                class="flex items-center gap-4 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white
+                  {{if this.sidebar.collapsed 'justify-center px-0 w-[40px] m-auto' 'px-5 w-full'}}"
                 {{!-- {{on "click" (fn this.setActive "dashboard")}} --}}
               >
                 {{this.HomeIcon}}
@@ -101,7 +109,8 @@ export default class LayoutSidebar extends Component {
               <LinkTo
                 @route="app.ticket"
                 @activeClass="bg-white text-gray-1002"
-                class="flex items-center gap-4 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white {{if this.sidebar.collapsed 'justify-center px-0 w-[40px] m-auto' 'px-5 w-full'}}"
+                class="flex items-center gap-4 py-2 rounded-md hover:bg-gray-1002 transition hover:text-white
+                  {{if this.sidebar.collapsed 'justify-center px-0 w-[40px] m-auto' 'px-5 w-full'}}"
                 {{!-- {{on "click" (fn this.setActive "tickets")}} --}}
               >
                 {{this.TicketDeskIcon}}

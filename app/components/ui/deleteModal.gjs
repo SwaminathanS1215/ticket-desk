@@ -30,7 +30,7 @@ export default class DeleteModal extends Component {
               Are you sure you want to delete this ticket?
             </p>
             {{#if @ticketTitle}}
-              <p class="mt-2 text-sm font-medium text-gray-900">
+              <p class="mt-2 w-[250px] truncate text-sm font-medium text-gray-900">
                 "{{@ticketTitle}}"
               </p>
             {{/if}}
