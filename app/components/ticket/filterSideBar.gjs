@@ -18,7 +18,9 @@ function getDaysDifference(dateStr) {
 function getPeriodLabel(days) {
   if (days <= 7) return { label: 'Last 7 days', value: '7' };
   if (days <= 30) return { label: 'Last Month', value: '30' };
-  if (days <= 90) return { label: 'Last 90 days', value: '90' };
+  if (days <= 90) return { label: 'Last 3 months', value: '90' };
+  if (days <= 180) return { label: 'Last 6 months', value: '180' };
+
   return 'Custom';
 }
 
@@ -58,6 +60,28 @@ export default class FilterSidebarComponent extends Component {
     super(...arguments);
     this.populateFilters();
     console.log('filterData', this.args.filterData);
+  }
+
+  /* ------------------ FILTER VISIBILITY HELPER ------------------ */
+
+  get showCreated() {
+    if (!this.searchQuery.trim()) return true;
+    return 'created'.includes(this.searchQuery.toLowerCase());
+  }
+
+  get showStatus() {
+    if (!this.searchQuery.trim()) return true;
+    return 'status'.includes(this.searchQuery.toLowerCase());
+  }
+
+  get showPriority() {
+    if (!this.searchQuery.trim()) return true;
+    return 'priority'.includes(this.searchQuery.toLowerCase());
+  }
+
+  get showSource() {
+    if (!this.searchQuery.trim()) return true;
+    return 'source'.includes(this.searchQuery.toLowerCase());
   }
 
   /* ------------------ ACTIONS (ONLY REQUIRED ONES) ------------------ */
@@ -151,7 +175,7 @@ export default class FilterSidebarComponent extends Component {
   parseQuery(queryString) {
     const params = new URLSearchParams(queryString);
     const result = {};
-
+    console.log('queryString', queryString);
     for (let [key, value] of params.entries()) {
       if (key.endsWith('[]')) {
         key = key.replace('[]', '');
@@ -169,14 +193,18 @@ export default class FilterSidebarComponent extends Component {
     if (!query) return;
 
     const parsed = this.parseQuery(query);
-
+    console.log('queryString', parsed);
     this.statusSearch = parsed['q[status_eq]'] || '';
     this.sourceSearch = parsed['q[source_eq]'] || '';
-    this.selectedPriority = parsed['q[priority_in]'] || [];
+    this.selectedPriority = (parsed['q[priority_in]'] || []).map(
+      (p) => p[0].toUpperCase() + p.slice(1).toLowerCase()
+    );
 
     const createdAt = parsed['q[created_at_gteq]'];
     if (createdAt) {
       const diff = getDaysDifference(createdAt);
+
+      console.log('queryString', diff);
       this.createdPeriod = getPeriodLabel(diff);
       console.log('createdAt', this.createdPeriod);
     }
@@ -186,7 +214,7 @@ export default class FilterSidebarComponent extends Component {
     <div
       class="w-full h-screen bg-gray-1003 border-l border-gray-200 flex flex-col"
       style="height: calc(100vh - 72px);"
-    >status
+    >
 
       {{! FIXED HEADER }}
       <div class="shrink-0 sticky top-0 z-10 border-b border-gray-200 px-4 py-3">
@@ -209,12 +237,14 @@ export default class FilterSidebarComponent extends Component {
       <div class="flex-1 overflow-y-auto px-4 py-4 space-y-5">
 
         {{! Created }}
-        <CustomSelect
-          @value={{this.createdPeriod}}
-          @options={{@createdOptions}}
-          @onChange={{this.updateCreatedPeriod}}
-          @label="Created"
-        />
+        {{#if this.showCreated}}
+          <CustomSelect
+            @value={{this.createdPeriod}}
+            @options={{@createdOptions}}
+            @onChange={{this.updateCreatedPeriod}}
+            @label="Created"
+          />
+        {{/if}}
 
         {{! Agents }}
         {{!-- <CustomSelect
@@ -280,20 +310,24 @@ export default class FilterSidebarComponent extends Component {
         /> --}}
 
         {{! Status }}
-        <CustomSelect
-          @value={{this.statusSearch}}
-          @options={{@statusOptions}}
-          @onChange={{this.updateStatusSearch}}
-          @label="Status"
-        />
+        {{#if this.showStatus}}
+          <CustomSelect
+            @value={{this.statusSearch}}
+            @options={{@statusOptions}}
+            @onChange={{this.updateStatusSearch}}
+            @label="Status"
+          />
+        {{/if}}
 
         {{! Priority }}
-        <CheckboxGroup
-          @options={{@priorityOptions}}
-          @selected={{this.selectedPriority}}
-          @onChange={{fn this.updateCheckboxGroup "selectedPriority"}}
-          @label="Priority"
-        />
+        {{#if this.showPriority}}
+          <CheckboxGroup
+            @options={{@priorityOptions}}
+            @selected={{this.selectedPriority}}
+            @onChange={{fn this.updateCheckboxGroup "selectedPriority"}}
+            @label="Priority"
+          />
+        {{/if}}
 
         {{!-- {{! Urgency }}
         <CheckboxGroup
@@ -320,12 +354,14 @@ export default class FilterSidebarComponent extends Component {
         /> --}}
 
         {{! Source }}
-        <CustomSelect
-          @value={{this.sourceSearch}}
-          @options={{@sourceOptions}}
-          @onChange={{this.updateSourceSearch}}
-          @label="Source"
-        />
+        {{#if this.showSource}}
+          <CustomSelect
+            @value={{this.sourceSearch}}
+            @options={{@sourceOptions}}
+            @onChange={{this.updateSourceSearch}}
+            @label="Source"
+          />
+        {{/if}}
 
         {{! Tags }}
         {{!-- <TagInput @label="Tags" @value={{this.tagsSearch}} @onChange={{this.updateTagsSearch}} /> --}}

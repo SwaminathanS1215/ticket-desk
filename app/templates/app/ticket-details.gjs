@@ -10,8 +10,11 @@ import CreateTicketForm from '../../components/create-ticket-form.gjs';
       @deleteComment={{@controller.deleteComment}}
       @uploadFile={{@controller.uploadFile}}
       @onRemoveExistedFile={{@controller.removeAttachment}}
+      @existedFile={{@model.attachment}}
     />
-    <div class="flex-1 border border-gray-200 rounded-lg bg-white shadow-sm fixed overflow-y-auto right-0 top-20 bottom-2 w-1/3 py-2">
+    <div
+      class="flex-1 border border-gray-200 rounded-lg bg-white shadow-sm fixed overflow-y-auto right-0 top-20 bottom-2 w-1/3 py-2"
+    >
       <CreateTicketForm
         @formData={{@model.ticket}}
         @onSubmit={{@controller.updateTicket}}

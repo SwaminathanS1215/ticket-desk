@@ -12,7 +12,7 @@ export default class TableToolbar extends Component {
     { value: 'requestor', label: 'Requestor' },
     { value: 'status', label: 'Status' },
     { value: 'priority', label: 'Priority' },
-    { value: 'department', label: 'Department' },
+
     { value: 'source', label: 'Source' },
   ];
   @tracked selectedSort = null;
