@@ -11,6 +11,10 @@ export default class AppCreateTicketController extends Controller {
   @action async createTicket(form) {
     await this.api.postJson(API_ENDPOINTS.CREATE_TICKET, form);
     this.toast.success('Ticket created successfully');
-    this.router.transitionTo('app.ticket');
+    this.router.transitionTo('app.ticket', {
+      queryParams: {
+        sortOrder: 'desc',
+      },
+    });
   }
 }
