@@ -8,7 +8,7 @@ import { fn } from '@ember/helper';
 
 export default class TableToolbar extends Component {
   sortFields = [
-    { value: 'subject', label: 'Subject' },
+    { value: 'title', label: 'Subject' },
     { value: 'requestor', label: 'Requestor' },
     { value: 'status', label: 'Status' },
     { value: 'priority', label: 'Priority' },
